@@ -1,6 +1,8 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using FitnessCenterApp.Models;
+using System.Diagnostics;
+
 
 namespace FitnessCenterApp.Controllers;
 

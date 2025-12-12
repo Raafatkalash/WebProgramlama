@@ -1,0 +1,8 @@
+C:\Users\raftk\OneDrive\Desktop\webprojects\WebProgramlama\FitnessCenterApp\obj\Debug\net9.0\FitnessCenterApp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\raftk\OneDrive\Desktop\webprojects\WebProgramlama\FitnessCenterApp\obj\Debug\net9.0\FitnessCenterApp.AssemblyInfoInputs.cache
+C:\Users\raftk\OneDrive\Desktop\webprojects\WebProgramlama\FitnessCenterApp\obj\Debug\net9.0\FitnessCenterApp.AssemblyInfo.cs
+C:\Users\raftk\OneDrive\Desktop\webprojects\WebProgramlama\FitnessCenterApp\obj\Debug\net9.0\FitnessCenterApp.csproj.CoreCompileInputs.cache
+C:\Users\raftk\OneDrive\Desktop\webprojects\WebProgramlama\FitnessCenterApp\obj\Debug\net9.0\FitnessCenterApp.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\raftk\OneDrive\Desktop\webprojects\WebProgramlama\FitnessCenterApp\obj\Debug\net9.0\FitnessCenterApp.RazorAssemblyInfo.cache
+C:\Users\raftk\OneDrive\Desktop\webprojects\WebProgramlama\FitnessCenterApp\obj\Debug\net9.0\FitnessCenterApp.RazorAssemblyInfo.cs
+C:\Users\raftk\OneDrive\Desktop\webprojects\WebProgramlama\FitnessCenterApp\obj\Debug\net9.0\FitnessCenterApp.sourcelink.json
