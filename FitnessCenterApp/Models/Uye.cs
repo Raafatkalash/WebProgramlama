@@ -1,18 +1,28 @@
-using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace FitnessCenterApp.Models
 {
     public class Uye
     {
         public int Id { get; set; }
-        public string AdSoyad { get; set; }
-        public string Email { get; set; }
-        public string Telefon { get; set; }
 
-        public DateTime UyelikBaslangic { get; set; } = DateTime.Now;
-        public bool AktifMi { get; set; } = true;
+        [Required(ErrorMessage = "Ad zorunludur.")]
+        [StringLength(50)]
+        public string Ad { get; set; } = string.Empty;
 
-        public ICollection<Randevu> Randevular { get; set; }
+        [Required(ErrorMessage = "Soyad zorunludur.")]
+        [StringLength(50)]
+        public string Soyad { get; set; } = string.Empty;
+
+        [Phone]
+        [StringLength(20)]
+        public string Telefon { get; set; } = string.Empty;
+
+        [EmailAddress]
+        [StringLength(100)]
+        public string Email { get; set; } = string.Empty;
+
+        // لو حابب تستخدم AdSoyad في الجدول / العرض:
+        public string AdSoyad => $"{Ad} {Soyad}";
     }
 }

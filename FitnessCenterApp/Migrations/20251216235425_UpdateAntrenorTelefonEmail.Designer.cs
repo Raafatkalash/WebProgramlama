@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitnessCenterApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251216214831_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20251216235425_UpdateAntrenorTelefonEmail")]
+    partial class UpdateAntrenorTelefonEmail
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,20 +33,31 @@ namespace FitnessCenterApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AdSoyad")
+                    b.Property<string>("Ad")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int?>("SalonId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Telefon")
+                    b.Property<string>("Soyad")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Telefon")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("UzmanlikAlani")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -159,23 +170,25 @@ namespace FitnessCenterApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AdSoyad")
+                    b.Property<string>("Ad")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("AktifMi")
-                        .HasColumnType("bit");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Soyad")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Telefon")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UyelikBaslangic")
-                        .HasColumnType("datetime2");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id");
 
@@ -184,11 +197,9 @@ namespace FitnessCenterApp.Migrations
 
             modelBuilder.Entity("FitnessCenterApp.Models.Antrenor", b =>
                 {
-                    b.HasOne("FitnessCenterApp.Models.Salon", "Salon")
+                    b.HasOne("FitnessCenterApp.Models.Salon", null)
                         .WithMany("Antrenorler")
                         .HasForeignKey("SalonId");
-
-                    b.Navigation("Salon");
                 });
 
             modelBuilder.Entity("FitnessCenterApp.Models.Hizmet", b =>
@@ -205,7 +216,7 @@ namespace FitnessCenterApp.Migrations
             modelBuilder.Entity("FitnessCenterApp.Models.Randevu", b =>
                 {
                     b.HasOne("FitnessCenterApp.Models.Antrenor", "Antrenor")
-                        .WithMany("Randevular")
+                        .WithMany()
                         .HasForeignKey("AntrenorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -217,7 +228,7 @@ namespace FitnessCenterApp.Migrations
                         .IsRequired();
 
                     b.HasOne("FitnessCenterApp.Models.Uye", "Uye")
-                        .WithMany("Randevular")
+                        .WithMany()
                         .HasForeignKey("UyeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -227,11 +238,6 @@ namespace FitnessCenterApp.Migrations
                     b.Navigation("Hizmet");
 
                     b.Navigation("Uye");
-                });
-
-            modelBuilder.Entity("FitnessCenterApp.Models.Antrenor", b =>
-                {
-                    b.Navigation("Randevular");
                 });
 
             modelBuilder.Entity("FitnessCenterApp.Models.Hizmet", b =>
@@ -244,11 +250,6 @@ namespace FitnessCenterApp.Migrations
                     b.Navigation("Antrenorler");
 
                     b.Navigation("Hizmetler");
-                });
-
-            modelBuilder.Entity("FitnessCenterApp.Models.Uye", b =>
-                {
-                    b.Navigation("Randevular");
                 });
 #pragma warning restore 612, 618
         }

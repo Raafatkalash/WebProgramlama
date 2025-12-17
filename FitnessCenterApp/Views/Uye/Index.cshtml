@@ -1,0 +1,33 @@
+@model IEnumerable<FitnessCenterApp.Models.Uye>
+
+<h2>Üye Listesi</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Yeni Üye Ekle</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Ad</th>
+            <th>Soyad</th>
+            <th>Telefon</th>
+            <th>Email</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Ad</td>
+            <td>@item.Soyad</td>
+            <td>@item.Telefon</td>
+            <td>@item.Email</td>
+            <td>
+                @* لاحقاً ممكن نضيف Edit / Details / Delete *@
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

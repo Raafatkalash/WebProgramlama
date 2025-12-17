@@ -1,0 +1,35 @@
+@model IEnumerable<FitnessCenterApp.Models.Antrenor>
+
+@{
+    ViewData["Title"] = "Antrenör Listesi";
+}
+
+<h2>Antrenör Listesi</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Yeni Antrenör</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Ad</th>
+            <th>Soyad</th>
+            <th>Uzmanlık Alanı</th>
+            <th>Telefon</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Ad</td>
+            <td>@item.Soyad</td>
+            <td>@item.UzmanlikAlani</td>
+            <td>@item.Telefon</td>
+            <td>@item.Email</td>
+        </tr>
+    }
+    </tbody>
+</table>
