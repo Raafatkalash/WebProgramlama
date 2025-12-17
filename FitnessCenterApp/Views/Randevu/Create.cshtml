@@ -1,0 +1,67 @@
+@model FitnessCenterApp.Models.Randevu
+
+@{
+    ViewData["Title"] = "Yeni Randevu";
+}
+
+<div class="card page-card">
+    <div class="card-body">
+        <h2 class="page-title mb-3">Yeni Randevu</h2>
+        <p class="text-muted mb-4">
+            Üye için uygun antrenör, salon ve tarih seçerek yeni randevu oluştur.
+        </p>
+
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+            <div class="mb-3">
+                <label asp-for="UyeId" class="form-label">Üye</label>
+                <select asp-for="UyeId" class="form-select" asp-items="ViewBag.UyeId">
+                    <option value="">Üye seçiniz</option>
+                </select>
+                <span asp-validation-for="UyeId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="AntrenorId" class="form-label">Antrenör</label>
+                <select asp-for="AntrenorId" class="form-select" asp-items="ViewBag.AntrenorId">
+                    <option value="">Antrenör seçiniz</option>
+                </select>
+                <span asp-validation-for="AntrenorId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="SalonId" class="form-label">Salon</label>
+                <select asp-for="SalonId" class="form-select" asp-items="ViewBag.SalonId">
+                    <option value="">Salon seçiniz</option>
+                </select>
+                <span asp-validation-for="SalonId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="TarihSaat" class="form-label">Tarih &amp; Saat</label>
+                <input asp-for="TarihSaat" class="form-control" type="datetime-local" />
+                <span asp-validation-for="TarihSaat" class="text-danger"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Not" class="form-label">Not (isteğe bağlı)</label>
+                <textarea asp-for="Not" class="form-control" rows="2" placeholder="Örn: Yeni başlayan seviye, sakatlık, özel notlar..."></textarea>
+                <span asp-validation-for="Not" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle me-1"></i> Kaydet
+                </button>
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    İptal
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

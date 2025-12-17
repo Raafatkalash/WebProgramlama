@@ -1,17 +1,25 @@
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace FitnessCenterApp.Models
 {
     public class Salon
     {
-        public int Id { get; set; }                 // Birincil anahtar
-        public string Ad { get; set; }              // Salon adı
-        public string Adres { get; set; }           // Adres
-        public string Telefon { get; set; }         // İletişim telefonu
-        public string CalismaSaatleri { get; set; } // Örn: "Hafta içi 09:00-22:00"
+        public int Id { get; set; }
 
-        // İlişkiler
-        public ICollection<Hizmet> Hizmetler { get; set; }
-        public ICollection<Antrenor> Antrenorler { get; set; }
+        [Required]
+        [StringLength(100)]
+        public string Ad { get; set; } = string.Empty;
+
+        [StringLength(100)]
+        public string Sehir { get; set; } = string.Empty;
+
+        [StringLength(200)]
+        public string? Adres { get; set; }
+
+        [Phone]
+        [StringLength(20)]
+        public string? Telefon { get; set; }
+
+        public bool Aktif { get; set; }
     }
 }

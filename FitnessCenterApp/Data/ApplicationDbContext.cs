@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using FitnessCenterApp.Models;
 
+
 namespace FitnessCenterApp.Data
 {
     public class ApplicationDbContext : DbContext
@@ -11,10 +12,11 @@ namespace FitnessCenterApp.Data
         }
 
         // Veritabanındaki tablolar
-        public DbSet<Salon> Salonlar { get; set; }
         public DbSet<Antrenor> Antrenorler { get; set; }
         public DbSet<Uye> Uyeler { get; set; }
         public DbSet<Hizmet> Hizmetler { get; set; }
         public DbSet<Randevu> Randevular { get; set; }
+        public DbSet<Salon> Salonlar { get; set; } = default!;
+
     }
 }

@@ -29,6 +29,17 @@
             <td>@item.UzmanlikAlani</td>
             <td>@item.Telefon</td>
             <td>@item.Email</td>
+            <th>İşlemler</th>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">
+                 Düzenle
+                </a>
+             <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger ms-1">
+                   Sil
+              </a>
+            </td>
+
+
         </tr>
     }
     </tbody>

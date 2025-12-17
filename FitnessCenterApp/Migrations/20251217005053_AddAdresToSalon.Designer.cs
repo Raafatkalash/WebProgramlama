@@ -4,6 +4,7 @@ using FitnessCenterApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitnessCenterApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251217005053_AddAdresToSalon")]
+    partial class AddAdresToSalon
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,13 +101,14 @@ namespace FitnessCenterApp.Migrations
                     b.Property<int>("AntrenorId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("HizmetId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Not")
+                    b.Property<string>("Durum")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SalonId")
+                    b.Property<int>("HizmetId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SureDakika")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TarihSaat")
@@ -118,8 +122,6 @@ namespace FitnessCenterApp.Migrations
                     b.HasIndex("AntrenorId");
 
                     b.HasIndex("HizmetId");
-
-                    b.HasIndex("SalonId");
 
                     b.HasIndex("UyeId");
 
@@ -212,13 +214,9 @@ namespace FitnessCenterApp.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FitnessCenterApp.Models.Hizmet", null)
+                    b.HasOne("FitnessCenterApp.Models.Hizmet", "Hizmet")
                         .WithMany("Randevular")
-                        .HasForeignKey("HizmetId");
-
-                    b.HasOne("FitnessCenterApp.Models.Salon", "Salon")
-                        .WithMany()
-                        .HasForeignKey("SalonId")
+                        .HasForeignKey("HizmetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -230,7 +228,7 @@ namespace FitnessCenterApp.Migrations
 
                     b.Navigation("Antrenor");
 
-                    b.Navigation("Salon");
+                    b.Navigation("Hizmet");
 
                     b.Navigation("Uye");
                 });

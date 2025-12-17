@@ -1,0 +1,34 @@
+using FitnessCenterApp.Data;
+using FitnessCenterApp.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+namespace FitnessCenterApp.Controllers
+{
+    public class RaporlamaController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+
+        public RaporlamaController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        // GET: /Raporlama/AntrenorRandevuSayisi
+        public async Task<IActionResult> AntrenorRandevuSayisi()
+        {
+            var veri = await _context.Randevular
+                .Include(r => r.Antrenor)
+                .GroupBy(r => new { r.AntrenorId, r.Antrenor.Ad, r.Antrenor.Soyad })
+                .Select(g => new AntrenorRandevuRaporViewModel
+                {
+                    AntrenorId = g.Key.AntrenorId,
+                    AntrenorAdSoyad = g.Key.Ad + " " + g.Key.Soyad,
+                    RandevuSayisi = g.Count()
+                })
+                .ToListAsync();
+
+            return View(veri);
+        }
+    }
+}

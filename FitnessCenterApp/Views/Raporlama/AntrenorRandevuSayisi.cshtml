@@ -1,0 +1,25 @@
+@model IEnumerable<FitnessCenterApp.Models.AntrenorRandevuRaporViewModel>
+
+@{
+    ViewData["Title"] = "Antrenör Randevu Raporu";
+}
+
+<h2>Antrenör Randevu Raporu</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Antrenör</th>
+            <th>Randevu Sayısı</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.AntrenorAdSoyad</td>
+            <td>@item.RandevuSayisi</td>
+        </tr>
+    }
+    </tbody>
+</table>

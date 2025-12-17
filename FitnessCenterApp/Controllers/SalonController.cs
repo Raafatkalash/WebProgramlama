@@ -7,110 +7,107 @@ using FitnessCenterApp.Models;
 
 namespace FitnessCenterApp.Controllers
 {
-    public class AntrenorController : Controller
+    public class SalonController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public AntrenorController(ApplicationDbContext context)
+        public SalonController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Antrenor
+        // GET: Salon
         public async Task<IActionResult> Index()
         {
-            var antrenorler = await _context.Antrenorler.ToListAsync();
-            return View(antrenorler);
+            var salonlar = await _context.Salonlar.ToListAsync();
+            return View(salonlar);
         }
 
-        // GET: Antrenor/Create
+        // GET: Salon/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Antrenor/Create
+        // POST: Salon/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Antrenor antrenor)
+        public async Task<IActionResult> Create(Salon salon)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(antrenor);
+                _context.Add(salon);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(antrenor);
+            return View(salon);
         }
 
-        // GET: Antrenor/Edit/5
+        // GET: Salon/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
                 return NotFound();
 
-            var antrenor = await _context.Antrenorler.FindAsync(id);
-            if (antrenor == null)
+            var salon = await _context.Salonlar.FindAsync(id);
+            if (salon == null)
                 return NotFound();
 
-            return View(antrenor);
+            return View(salon);
         }
 
-        // POST: Antrenor/Edit/5
+        // POST: Salon/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Antrenor antrenor)
+        public async Task<IActionResult> Edit(int id, Salon salon)
         {
-            if (id != antrenor.Id)
+            if (id != salon.Id)
                 return NotFound();
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(antrenor);
+                    _context.Update(salon);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_context.Antrenorler.Any(e => e.Id == antrenor.Id))
+                    if (!_context.Salonlar.Any(e => e.Id == salon.Id))
                         return NotFound();
                     else
                         throw;
                 }
-
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(antrenor);
+            return View(salon);
         }
 
-        // GET: Antrenor/Delete/5
+        // GET: Salon/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
                 return NotFound();
 
-            var antrenor = await _context.Antrenorler
-                .FirstOrDefaultAsync(a => a.Id == id);
-
-            if (antrenor == null)
+            var salon = await _context.Salonlar
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (salon == null)
                 return NotFound();
 
-            return View(antrenor);
+            return View(salon);
         }
 
-        // POST: Antrenor/Delete/5
+        // POST: Salon/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var antrenor = await _context.Antrenorler.FindAsync(id);
-
-            if (antrenor != null)
+            var salon = await _context.Salonlar.FindAsync(id);
+            if (salon != null)
             {
-                _context.Antrenorler.Remove(antrenor);
+                _context.Salonlar.Remove(salon);
                 await _context.SaveChangesAsync();
             }
 

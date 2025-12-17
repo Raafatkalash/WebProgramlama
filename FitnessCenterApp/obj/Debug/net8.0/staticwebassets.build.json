@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "bO8nc3hEhGxjZ5mOqjPmmj706j08zOFoEjKYwkpNwrg=",
+  "Hash": "2GQkQVjI2PzTsd7cdqS3YyF1vdL2fwoIseA4UylNPv0=",
   "Source": "FitnessCenterApp",
   "BasePath": "_content/FitnessCenterApp",
   "Mode": "Default",
@@ -73,8 +73,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "b9sayid5wm",
-      "Integrity": "j6fhJSuuyLpOSLuPJU0TsDV0iNjor5S3rDnvxJrt4bg=",
+      "Fingerprint": "5h5shvqf6l",
+      "Integrity": "RwgnAJyeHmmtvX5E/JXdkd5aP0bsNEeF2S0UsmUa/kI=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\site.css"
@@ -1384,7 +1384,7 @@
   ],
   "Endpoints": [
     {
-      "Route": "css/site.b9sayid5wm.css",
+      "Route": "css/site.5h5shvqf6l.css",
       "AssetFile": "C:\\Users\\raftk\\OneDrive\\Desktop\\webprojects\\WebProgramlama\\FitnessCenterApp\\wwwroot\\css\\site.css",
       "Selectors": [],
       "ResponseHeaders": [
@@ -1394,7 +1394,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "667"
+          "Value": "657"
         },
         {
           "Name": "Content-Type",
@@ -1402,11 +1402,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"j6fhJSuuyLpOSLuPJU0TsDV0iNjor5S3rDnvxJrt4bg=\""
+          "Value": "\"RwgnAJyeHmmtvX5E/JXdkd5aP0bsNEeF2S0UsmUa/kI=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 10 Dec 2025 20:45:01 GMT"
+          "Value": "Wed, 17 Dec 2025 03:00:34 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1416,7 +1416,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "b9sayid5wm"
+          "Value": "5h5shvqf6l"
         },
         {
           "Name": "label",
@@ -1424,7 +1424,7 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-j6fhJSuuyLpOSLuPJU0TsDV0iNjor5S3rDnvxJrt4bg="
+          "Value": "sha256-RwgnAJyeHmmtvX5E/JXdkd5aP0bsNEeF2S0UsmUa/kI="
         }
       ]
     },
@@ -1439,7 +1439,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "667"
+          "Value": "657"
         },
         {
           "Name": "Content-Type",
@@ -1447,11 +1447,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"j6fhJSuuyLpOSLuPJU0TsDV0iNjor5S3rDnvxJrt4bg=\""
+          "Value": "\"RwgnAJyeHmmtvX5E/JXdkd5aP0bsNEeF2S0UsmUa/kI=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 10 Dec 2025 20:45:01 GMT"
+          "Value": "Wed, 17 Dec 2025 03:00:34 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1461,7 +1461,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-j6fhJSuuyLpOSLuPJU0TsDV0iNjor5S3rDnvxJrt4bg="
+          "Value": "sha256-RwgnAJyeHmmtvX5E/JXdkd5aP0bsNEeF2S0UsmUa/kI="
         }
       ]
     },

@@ -24,6 +24,14 @@ build_property.EnableCodeStyleSeverity =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW50cmVub3JcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/raftk/OneDrive/Desktop/webprojects/WebProgramlama/FitnessCenterApp/Views/Antrenor/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW50cmVub3JcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/raftk/OneDrive/Desktop/webprojects/WebProgramlama/FitnessCenterApp/Views/Antrenor/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW50cmVub3JcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/raftk/OneDrive/Desktop/webprojects/WebProgramlama/FitnessCenterApp/Views/Antrenor/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW50cmVub3JcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -34,6 +42,38 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/raftk/OneDrive/Desktop/webprojects/WebProgramlama/FitnessCenterApp/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/raftk/OneDrive/Desktop/webprojects/WebProgramlama/FitnessCenterApp/Views/Randevu/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmFuZGV2dVxDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/raftk/OneDrive/Desktop/webprojects/WebProgramlama/FitnessCenterApp/Views/Randevu/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmFuZGV2dVxEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/raftk/OneDrive/Desktop/webprojects/WebProgramlama/FitnessCenterApp/Views/Randevu/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmFuZGV2dVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/raftk/OneDrive/Desktop/webprojects/WebProgramlama/FitnessCenterApp/Views/Raporlama/AntrenorRandevuSayisi.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmFwb3JsYW1hXEFudHJlbm9yUmFuZGV2dVNheWlzaS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/raftk/OneDrive/Desktop/webprojects/WebProgramlama/FitnessCenterApp/Views/Salon/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2Fsb25cQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/raftk/OneDrive/Desktop/webprojects/WebProgramlama/FitnessCenterApp/Views/Salon/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2Fsb25cRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/raftk/OneDrive/Desktop/webprojects/WebProgramlama/FitnessCenterApp/Views/Salon/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2Fsb25cRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/raftk/OneDrive/Desktop/webprojects/WebProgramlama/FitnessCenterApp/Views/Salon/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2Fsb25cSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/raftk/OneDrive/Desktop/webprojects/WebProgramlama/FitnessCenterApp/Views/Shared/Error.cshtml]
