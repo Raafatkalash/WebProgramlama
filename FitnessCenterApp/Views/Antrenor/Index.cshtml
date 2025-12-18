@@ -1,46 +1,41 @@
 @model IEnumerable<FitnessCenterApp.Models.Antrenor>
+@using System.Linq
 
 @{
-    ViewData["Title"] = "Antrenör Listesi";
+    ViewData["Title"] = "Antrenörler";
 }
 
-<h2>Antrenör Listesi</h2>
+<h2>Antrenörler</h2>
 
 <p>
     <a asp-action="Create" class="btn btn-primary">Yeni Antrenör</a>
 </p>
 
-<table class="table table-striped">
+<table class="table table-bordered">
     <thead>
         <tr>
-            <th>Ad</th>
-            <th>Soyad</th>
-            <th>Uzmanlık Alanı</th>
-            <th>Telefon</th>
-            <th>Email</th>
+            <th>Ad Soyad</th>
+            <th>Uzmanlık</th>
+            <th>Salon</th>
+            <th>Hizmetler</th>
+            <th>Müsait Saat</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
-    @foreach (var item in Model)
-    {
+@foreach (var a in Model)
+{
         <tr>
-            <td>@item.Ad</td>
-            <td>@item.Soyad</td>
-            <td>@item.UzmanlikAlani</td>
-            <td>@item.Telefon</td>
-            <td>@item.Email</td>
-            <th>İşlemler</th>
+            <td>@a.AdSoyad</td>
+            <td>@a.UzmanlikAlani</td>
+            <td>@a.Salon?.Ad</td>
+            <td>@string.Join(", ", a.Hizmetler.Select(h => h.Ad))</td>
+            <td>@a.MusaitBaslangic - @a.MusaitBitis</td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">
-                 Düzenle
-                </a>
-             <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger ms-1">
-                   Sil
-              </a>
+                <a asp-action="Edit" asp-route-id="@a.Id" class="btn btn-sm btn-warning">Edit</a>
+                <a asp-action="Delete" asp-route-id="@a.Id" class="btn btn-sm btn-danger">Delete</a>
             </td>
-
-
         </tr>
-    }
+}
     </tbody>
 </table>

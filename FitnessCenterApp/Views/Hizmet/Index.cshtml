@@ -1,0 +1,38 @@
+@model IEnumerable<FitnessCenterApp.Models.Hizmet>
+
+@{
+    ViewData["Title"] = "Hizmetler";
+}
+
+<h2>Hizmetler</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Yeni Hizmet</a>
+</p>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Ad</th>
+            <th>Süre (dk)</th>
+            <th>Ücret</th>
+            <th>Salon</th>
+            <th style="width:220px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var h in Model)
+{
+        <tr>
+            <td>@h.Ad</td>
+            <td>@h.SureDakika</td>
+            <td>@h.Ucret.ToString("0.00")</td>
+            <td>@(h.Salon?.Ad ?? "-")</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@h.Id" class="btn btn-sm btn-warning">Düzenle</a>
+                <a asp-action="Delete" asp-route-id="@h.Id" class="btn btn-sm btn-danger">Sil</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,13 +1,13 @@
-@model FitnessCenterApp.Models.Antrenor
+@model FitnessCenterApp.Models.Hizmet
 
 @{
-    ViewData["Title"] = "Antrenör Sil";
+    ViewData["Title"] = "Hizmet Sil";
 }
 
-<h2>Antrenör Sil</h2>
+<h2>Hizmet Sil</h2>
 
 <div class="alert alert-warning">
-    <b>@Model.AdSoyad</b> silinsin mi?
+    <b>@Model.Ad</b> silinsin mi?
 </div>
 
 <form asp-action="Delete" method="post">

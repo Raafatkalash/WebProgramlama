@@ -24,8 +24,17 @@
             <td>@item.Soyad</td>
             <td>@item.Telefon</td>
             <td>@item.Email</td>
+            <th>İşlemler</th>
             <td>
                 @* لاحقاً ممكن نضيف Edit / Details / Delete *@
+            </td>
+            <td>
+            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">
+               Düzenle
+            </a>
+              <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger ms-1">
+               Sil
+             </a>
             </td>
         </tr>
     }

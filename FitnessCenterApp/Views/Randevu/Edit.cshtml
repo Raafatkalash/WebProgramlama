@@ -1,21 +1,21 @@
 @model FitnessCenterApp.Models.Randevu
+@using Microsoft.AspNetCore.Mvc.Rendering
 
 @{
-    ViewData["Title"] = "Yeni Randevu";
+    ViewData["Title"] = "Randevu Düzenle";
 }
 
-<h2 class="mb-4">Yeni Randevu</h2>
+<h2 class="mb-4">Randevu Düzenle</h2>
 
-<form asp-action="Create" method="post">
+<form asp-action="Edit" method="post">
     @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
 
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <div class="mb-3">
         <label asp-for="UyeId" class="form-label"></label>
-        <select asp-for="UyeId"
-                class="form-select"
-                asp-items="@(ViewData["UyeId"] as SelectList)">
+        <select asp-for="UyeId" class="form-select" asp-items="@(ViewData["UyeId"] as SelectList)">
             <option value="">Üye seçiniz</option>
         </select>
         <span asp-validation-for="UyeId" class="text-danger"></span>
@@ -23,9 +23,7 @@
 
     <div class="mb-3">
         <label asp-for="AntrenorId" class="form-label"></label>
-        <select asp-for="AntrenorId"
-                class="form-select"
-                asp-items="@(ViewData["AntrenorId"] as SelectList)">
+        <select asp-for="AntrenorId" class="form-select" asp-items="@(ViewData["AntrenorId"] as SelectList)">
             <option value="">Antrenör seçiniz</option>
         </select>
         <span asp-validation-for="AntrenorId" class="text-danger"></span>
@@ -33,9 +31,7 @@
 
     <div class="mb-3">
         <label asp-for="SalonId" class="form-label"></label>
-        <select asp-for="SalonId"
-                class="form-select"
-                asp-items="@(ViewData["SalonId"] as SelectList)">
+        <select asp-for="SalonId" class="form-select" asp-items="@(ViewData["SalonId"] as SelectList)">
             <option value="">Salon seçiniz</option>
         </select>
         <span asp-validation-for="SalonId" class="text-danger"></span>
@@ -43,9 +39,7 @@
 
     <div class="mb-3">
         <label asp-for="HizmetId" class="form-label"></label>
-        <select asp-for="HizmetId"
-                class="form-select"
-                asp-items="@(ViewData["HizmetId"] as SelectList)">
+        <select asp-for="HizmetId" class="form-select" asp-items="@(ViewData["HizmetId"] as SelectList)">
             <option value="">Hizmet seçiniz</option>
         </select>
         <span asp-validation-for="HizmetId" class="text-danger"></span>
@@ -53,15 +47,10 @@
 
     <div class="mb-3">
         <label asp-for="TarihSaat" class="form-label"></label>
-
-        <input asp-for="TarihSaat"
+        <input class="form-control"
                type="datetime-local"
-               class="form-control"
-               step="60"
-               value="@(Model.TarihSaat == default
-                        ? DateTime.Now.AddMinutes(30).ToString("yyyy-MM-ddTHH:mm")
-                        : Model.TarihSaat.ToString("yyyy-MM-ddTHH:mm"))" />
-
+               name="TarihSaat"
+               value="@Model.TarihSaat.ToString("yyyy-MM-ddTHH:mm")" />
         <span asp-validation-for="TarihSaat" class="text-danger"></span>
     </div>
 

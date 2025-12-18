@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FitnessCenterApp.Models
 {
@@ -22,7 +24,10 @@ namespace FitnessCenterApp.Models
         [StringLength(100)]
         public string Email { get; set; } = string.Empty;
 
-        // لو حابب تستخدم AdSoyad في الجدول / العرض:
+        [NotMapped]
         public string AdSoyad => $"{Ad} {Soyad}";
+
+        // ✅ مواعيد العضو (مفيد + يساعد بالتعارض)
+        public ICollection<Randevu> Randevular { get; set; } = new List<Randevu>();
     }
 }

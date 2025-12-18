@@ -1,0 +1,54 @@
+@model FitnessCenterApp.Models.Hizmet
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    ViewData["Title"] = "Yeni Hizmet";
+}
+
+<h2>Yeni Hizmet</h2>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="Ad" class="form-label"></label>
+        <input asp-for="Ad" class="form-control" />
+        <span asp-validation-for="Ad" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Aciklama" class="form-label"></label>
+        <input asp-for="Aciklama" class="form-control" />
+        <span asp-validation-for="Aciklama" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="SureDakika" class="form-label"></label>
+        <input asp-for="SureDakika" type="number" min="1" max="1440" class="form-control" />
+        <span asp-validation-for="SureDakika" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Ucret" class="form-label"></label>
+        <input asp-for="Ucret" type="number" step="0.01" class="form-control" />
+        <span asp-validation-for="Ucret" class="text-danger"></span>
+    </div>
+
+    <!-- ✅ لازم يكون select مربوط بـ SalonId -->
+    <div class="mb-3">
+        <label asp-for="SalonId" class="form-label">Salon</label>
+        <select asp-for="SalonId"
+                class="form-select"
+                asp-items='@(ViewData["SalonId"] as SelectList)'>
+            <option value="">Salon seçiniz</option>
+        </select>
+        <span asp-validation-for="SalonId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">İptal</a>
+</form>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

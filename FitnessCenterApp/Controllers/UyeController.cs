@@ -1,11 +1,14 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FitnessCenterApp.Data;
 using FitnessCenterApp.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FitnessCenterApp.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class UyeController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -15,30 +18,72 @@ namespace FitnessCenterApp.Controllers
             _context = context;
         }
 
-        // GET: /Uye
         public async Task<IActionResult> Index()
         {
             var uyeler = await _context.Uyeler.ToListAsync();
             return View(uyeler);
         }
 
-        // GET: /Uye/Create
-        [HttpGet]
-        public IActionResult Create()
-        {
-            return View();
-        }
+        public IActionResult Create() => View();
 
-        // POST: /Uye/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Uye uye)
         {
-            if (!ModelState.IsValid)
-                return View(uye);
+            if (ModelState.IsValid)
+            {
+                _context.Add(uye);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(uye);
+        }
 
-            _context.Add(uye);
-            await _context.SaveChangesAsync();
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var uye = await _context.Uyeler.FindAsync(id);
+            if (uye == null) return NotFound();
+
+            return View(uye);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, Uye uye)
+        {
+            if (id != uye.Id) return NotFound();
+
+            if (ModelState.IsValid)
+            {
+                _context.Update(uye);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(uye);
+        }
+
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var uye = await _context.Uyeler.FirstOrDefaultAsync(m => m.Id == id);
+            if (uye == null) return NotFound();
+
+            return View(uye);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var uye = await _context.Uyeler.FindAsync(id);
+            if (uye != null)
+            {
+                _context.Uyeler.Remove(uye);
+                await _context.SaveChangesAsync();
+            }
             return RedirectToAction(nameof(Index));
         }
     }

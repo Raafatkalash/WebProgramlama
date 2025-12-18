@@ -4,46 +4,76 @@
     ViewData["Title"] = "Antrenör Düzenle";
 }
 
-<h1>Antrenör Düzenle</h1>
-<hr />
+<h2>Antrenör Düzenle</h2>
 
 <form asp-action="Edit" method="post">
     <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <div class="form-group mb-3">
+    <div class="mb-3">
         <label asp-for="Ad" class="form-label"></label>
         <input asp-for="Ad" class="form-control" />
         <span asp-validation-for="Ad" class="text-danger"></span>
     </div>
 
-    <div class="form-group mb-3">
+    <div class="mb-3">
         <label asp-for="Soyad" class="form-label"></label>
         <input asp-for="Soyad" class="form-control" />
         <span asp-validation-for="Soyad" class="text-danger"></span>
     </div>
 
-    <div class="form-group mb-3">
+    <div class="mb-3">
         <label asp-for="UzmanlikAlani" class="form-label"></label>
         <input asp-for="UzmanlikAlani" class="form-control" />
         <span asp-validation-for="UzmanlikAlani" class="text-danger"></span>
     </div>
 
-    <div class="form-group mb-3">
+    <div class="mb-3">
         <label asp-for="Telefon" class="form-label"></label>
         <input asp-for="Telefon" class="form-control" />
         <span asp-validation-for="Telefon" class="text-danger"></span>
     </div>
 
-    <div class="form-group mb-3">
+    <div class="mb-3">
         <label asp-for="Email" class="form-label"></label>
         <input asp-for="Email" class="form-control" />
         <span asp-validation-for="Email" class="text-danger"></span>
     </div>
 
+    <div class="mb-3">
+        <label asp-for="SalonId" class="form-label">Salon</label>
+        <select asp-for="SalonId" class="form-select" asp-items="(SelectList)ViewData["SalonId"]">
+            <option value="">Salon seçiniz</option>
+        </select>
+        <span asp-validation-for="SalonId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Hizmetler</label>
+        <select class="form-select"
+                name="selectedHizmetler"
+                multiple
+                size="6"
+                asp-items="(MultiSelectList)ViewData["Hizmetler"]">
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MusaitBaslangic" class="form-label">Müsait Başlangıç</label>
+        <input asp-for="MusaitBaslangic" type="time" class="form-control" />
+        <span asp-validation-for="MusaitBaslangic" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MusaitBitis" class="form-label">Müsait Bitiş</label>
+        <input asp-for="MusaitBitis" type="time" class="form-control" />
+        <span asp-validation-for="MusaitBitis" class="text-danger"></span>
+    </div>
+
     <button type="submit" class="btn btn-primary">Kaydet</button>
-    <a asp-action="Index" class="btn btn-secondary ms-2">İptal</a>
+    <a asp-action="Index" class="btn btn-secondary">İptal</a>
 </form>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

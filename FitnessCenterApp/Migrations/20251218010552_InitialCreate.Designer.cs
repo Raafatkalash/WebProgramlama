@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitnessCenterApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251217004124_AddSalon")]
-    partial class AddSalon
+    [Migration("20251218010552_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -70,7 +70,6 @@ namespace FitnessCenterApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Aciklama")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ad")
@@ -101,14 +100,17 @@ namespace FitnessCenterApp.Migrations
                     b.Property<int>("AntrenorId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Durum")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("HizmetId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SureDakika")
+                    b.Property<string>("Not")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("Onayli")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("SalonId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TarihSaat")
@@ -122,6 +124,8 @@ namespace FitnessCenterApp.Migrations
                     b.HasIndex("AntrenorId");
 
                     b.HasIndex("HizmetId");
+
+                    b.HasIndex("SalonId");
 
                     b.HasIndex("UyeId");
 
@@ -142,7 +146,6 @@ namespace FitnessCenterApp.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Adres")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
@@ -151,8 +154,8 @@ namespace FitnessCenterApp.Migrations
 
                     b.Property<string>("Sehir")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Telefon")
                         .HasMaxLength(20)
@@ -218,6 +221,12 @@ namespace FitnessCenterApp.Migrations
                     b.HasOne("FitnessCenterApp.Models.Hizmet", "Hizmet")
                         .WithMany("Randevular")
                         .HasForeignKey("HizmetId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FitnessCenterApp.Models.Salon", "Salon")
+                        .WithMany()
+                        .HasForeignKey("SalonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -230,6 +239,8 @@ namespace FitnessCenterApp.Migrations
                     b.Navigation("Antrenor");
 
                     b.Navigation("Hizmet");
+
+                    b.Navigation("Salon");
 
                     b.Navigation("Uye");
                 });

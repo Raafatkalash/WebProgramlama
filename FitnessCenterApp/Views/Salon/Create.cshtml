@@ -33,6 +33,19 @@
         <span asp-validation-for="Telefon" class="text-danger"></span>
     </div>
 
+    <!-- ✅ ساعات العمل (حسب المرجع) -->
+    <div class="form-group">
+        <label asp-for="AcilisSaati" class="control-label"></label>
+        <input asp-for="AcilisSaati" type="time" class="form-control" />
+        <span asp-validation-for="AcilisSaati" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="KapanisSaati" class="control-label"></label>
+        <input asp-for="KapanisSaati" type="time" class="form-control" />
+        <span asp-validation-for="KapanisSaati" class="text-danger"></span>
+    </div>
+
     <div class="form-group form-check">
         <input asp-for="Aktif" class="form-check-input" />
         <label asp-for="Aktif" class="form-check-label"></label>
