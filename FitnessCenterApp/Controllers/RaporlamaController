@@ -3,8 +3,12 @@ using FitnessCenterApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+
+
+
 namespace FitnessCenterApp.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class RaporlamaController : Controller
     {
         private readonly ApplicationDbContext _context;

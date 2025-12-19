@@ -1,15 +1,16 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FitnessCenterApp.Data;
 using FitnessCenterApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace FitnessCenterApp.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AntrenorController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -19,7 +20,6 @@ namespace FitnessCenterApp.Controllers
             _context = context;
         }
 
-        // GET: Antrenor
         public async Task<IActionResult> Index()
         {
             var list = await _context.Antrenorler
@@ -32,40 +32,34 @@ namespace FitnessCenterApp.Controllers
             return View(list);
         }
 
-        // GET: Antrenor/Create
         public async Task<IActionResult> Create()
         {
-            await FillDropdownsForAntrenorAsync(selectedSalonId: null, selectedHizmetIds: null);
+            await FillDropdownsForAntrenorAsync(null, null);
             return View();
         }
 
-        // POST: Antrenor/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Antrenor antrenor, int[] HizmetIds)
         {
-            // Validations
             if (antrenor.SalonId <= 0)
                 ModelState.AddModelError("SalonId", "Salon alanı zorunludur.");
 
             if (HizmetIds == null || HizmetIds.Length == 0)
                 ModelState.AddModelError("HizmetIds", "En az 1 hizmet seçmelisiniz.");
 
-            // Hizmetler salon ile uyumlu mu?
             if (ModelState.IsValid)
             {
                 var secilenHizmetler = await _context.Hizmetler
                     .Where(h => HizmetIds.Contains(h.Id))
                     .ToListAsync();
 
-                // Seçilen hizmetler boşsa
                 if (secilenHizmetler.Count == 0)
                 {
                     ModelState.AddModelError("HizmetIds", "Seçilen hizmetler bulunamadı.");
                 }
                 else
                 {
-                    // Salon uyumu kontrolü
                     bool salonUyumluDegil = secilenHizmetler.Any(h => h.SalonId != antrenor.SalonId);
                     if (salonUyumluDegil)
                         ModelState.AddModelError("HizmetIds", "Seçilen hizmetlerden bazıları bu salona ait değil.");
@@ -84,7 +78,6 @@ namespace FitnessCenterApp.Controllers
             return View(antrenor);
         }
 
-        // GET: Antrenor/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -101,7 +94,6 @@ namespace FitnessCenterApp.Controllers
             return View(antrenor);
         }
 
-        // POST: Antrenor/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Antrenor antrenor, int[] HizmetIds)
@@ -138,7 +130,6 @@ namespace FitnessCenterApp.Controllers
 
                     if (ModelState.IsValid)
                     {
-                        // Scalar fields
                         mevcut.Ad = antrenor.Ad;
                         mevcut.Soyad = antrenor.Soyad;
                         mevcut.UzmanlikAlani = antrenor.UzmanlikAlani;
@@ -148,7 +139,6 @@ namespace FitnessCenterApp.Controllers
                         mevcut.MusaitBaslangic = antrenor.MusaitBaslangic;
                         mevcut.MusaitBitis = antrenor.MusaitBitis;
 
-                        // Update many-to-many
                         mevcut.Hizmetler.Clear();
                         foreach (var h in secilenHizmetler)
                             mevcut.Hizmetler.Add(h);
@@ -163,7 +153,6 @@ namespace FitnessCenterApp.Controllers
             return View(antrenor);
         }
 
-        // GET: Antrenor/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
@@ -178,7 +167,6 @@ namespace FitnessCenterApp.Controllers
             return View(antrenor);
         }
 
-        // POST: Antrenor/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -189,7 +177,6 @@ namespace FitnessCenterApp.Controllers
 
             if (antrenor == null) return RedirectToAction(nameof(Index));
 
-            // إذا عندك Randevular مرتبطة بالمدرب، ممكن تمنع الحذف أو تحذفها/تلغيها حسب قرارك.
             bool hasRandevu = await _context.Randevular.AnyAsync(r => r.AntrenorId == id && !r.IptalEdildi);
             if (hasRandevu)
             {
@@ -203,7 +190,6 @@ namespace FitnessCenterApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // Helpers
         private async Task FillDropdownsForAntrenorAsync(int? selectedSalonId, int[]? selectedHizmetIds)
         {
             ViewBag.SalonId = new SelectList(
@@ -213,15 +199,10 @@ namespace FitnessCenterApp.Controllers
             );
 
             var hizmetlerQuery = _context.Hizmetler.AsQueryable();
-
-            // إذا بدك تعرض فقط خدمات الصالة المختارة:
             if (selectedSalonId.HasValue && selectedSalonId.Value > 0)
                 hizmetlerQuery = hizmetlerQuery.Where(h => h.SalonId == selectedSalonId.Value);
 
-            var hizmetler = await hizmetlerQuery
-                .OrderBy(h => h.Ad)
-                .ToListAsync();
-
+            var hizmetler = await hizmetlerQuery.OrderBy(h => h.Ad).ToListAsync();
             var selectedSet = (selectedHizmetIds ?? Array.Empty<int>()).ToHashSet();
 
             ViewBag.HizmetList = hizmetler.Select(h => new SelectListItem

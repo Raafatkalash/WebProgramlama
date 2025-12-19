@@ -1,4 +1,3 @@
-using System.Linq;
 using FitnessCenterApp.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -9,16 +8,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
-// DbContext
+// DbContext (SQL Server)
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Identity + Roles
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
-    // إذا بدك سياسات أقوى غيّرها لاحقاً، بس هيك بتمشي بسرعة للاختبار
-    options.SignIn.RequireConfirmedAccount = false;
-
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = false;
     options.Password.RequireLowercase = false;
@@ -26,9 +22,9 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     options.Password.RequiredLength = 3;
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
-.AddDefaultTokenProviders();
+.AddDefaultTokenProviders()
+.AddDefaultUI(); // ✅ Identity UI pages
 
-// Cookie paths (Identity UI)
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Identity/Account/Login";
@@ -49,33 +45,19 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthentication();
-app.UseAuthorization();
 
-// ✅ Seed Roles + Admin
-await SeedRolesAndAdminAsync(app);
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
-app.MapRazorPages();
-
-app.Run();
-
-static async Task SeedRolesAndAdminAsync(WebApplication app)
+// ✅ إنشاء Roles + Admin تلقائياً
+using (var scope = app.Services.CreateScope())
 {
-    using var scope = app.Services.CreateScope();
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
 
     string[] roles = { "Admin", "Uye" };
     foreach (var role in roles)
-    {
         if (!await roleManager.RoleExistsAsync(role))
             await roleManager.CreateAsync(new IdentityRole(role));
-    }
 
-    // Admin account
+    // ✅ Admin seed
     var adminEmail = "ogrencinumarasi@sakarya.edu.tr";
     var adminPass = "sau";
 
@@ -88,17 +70,41 @@ static async Task SeedRolesAndAdminAsync(WebApplication app)
             Email = adminEmail,
             EmailConfirmed = true
         };
+        await userManager.CreateAsync(adminUser, adminPass);
+        await userManager.AddToRoleAsync(adminUser, "Admin");
+    }
+}
 
-        var createResult = await userManager.CreateAsync(adminUser, adminPass);
-        if (!createResult.Succeeded)
+// ✅ Auto-assign "Uye" role لأي مستخدم سجّل دخول وما عنده Role
+app.Use(async (context, next) =>
+{
+    if (context.User.Identity?.IsAuthenticated == true)
+    {
+        var userManager = context.RequestServices.GetRequiredService<UserManager<IdentityUser>>();
+        var user = await userManager.GetUserAsync(context.User);
+
+        if (user != null)
         {
-            // لو فشل الإنشاء، خلي الخطأ واضح بدل ما يسكت
-            var errors = string.Join(" | ", createResult.Errors.Select(e => e.Description));
-            throw new Exception("Admin user could not be created: " + errors);
+            var isAdmin = await userManager.IsInRoleAsync(user, "Admin");
+            var isUye = await userManager.IsInRoleAsync(user, "Uye");
+
+            if (!isAdmin && !isUye)
+                await userManager.AddToRoleAsync(user, "Uye");
         }
     }
 
-    // ✅ تأكد أنه داخل رول Admin حتى لو كان موجود قبل
-    if (!await userManager.IsInRoleAsync(adminUser, "Admin"))
-        await userManager.AddToRoleAsync(adminUser, "Admin");
-}
+    await next();
+});
+
+app.UseAuthorization();
+
+// ✅ Attribute routing (API) + MVC routes
+app.MapControllers();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapRazorPages();
+
+app.Run();

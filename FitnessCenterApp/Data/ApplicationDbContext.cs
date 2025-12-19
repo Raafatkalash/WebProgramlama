@@ -1,4 +1,3 @@
-using System.Linq;
 using FitnessCenterApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -9,9 +8,7 @@ namespace FitnessCenterApp.Data
     public class ApplicationDbContext : IdentityDbContext<IdentityUser, IdentityRole, string>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
-        {
-        }
+            : base(options) { }
 
         public DbSet<Uye> Uyeler { get; set; } = null!;
         public DbSet<Antrenor> Antrenorler { get; set; } = null!;
@@ -34,9 +31,14 @@ namespace FitnessCenterApp.Data
             modelBuilder.Entity<Antrenor>()
                 .HasMany(a => a.Hizmetler)
                 .WithMany(h => h.Antrenorler);
+
+            // ✅ حل تحذير decimal truncation
             modelBuilder.Entity<Hizmet>()
                 .Property(h => h.Ucret)
                 .HasPrecision(18, 2);
+            modelBuilder.Entity<Hizmet>()
+               .Property(h => h.Ucret)
+             .HasPrecision(18, 2);
 
         }
     }

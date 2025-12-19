@@ -2,12 +2,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using FitnessCenterApp.Data;
 using FitnessCenterApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace FitnessCenterApp.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class HizmetController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -17,7 +19,6 @@ namespace FitnessCenterApp.Controllers
             _context = context;
         }
 
-        // GET: Hizmet
         public async Task<IActionResult> Index()
         {
             var list = await _context.Hizmetler
@@ -28,14 +29,12 @@ namespace FitnessCenterApp.Controllers
             return View(list);
         }
 
-        // GET: Hizmet/Create
         public IActionResult Create()
         {
             ViewData["SalonId"] = new SelectList(_context.Salonlar.OrderBy(s => s.Ad), "Id", "Ad");
             return View();
         }
 
-        // POST: Hizmet/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Hizmet hizmet)
@@ -51,7 +50,6 @@ namespace FitnessCenterApp.Controllers
             return View(hizmet);
         }
 
-        // GET: Hizmet/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -63,7 +61,6 @@ namespace FitnessCenterApp.Controllers
             return View(hizmet);
         }
 
-        // POST: Hizmet/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Hizmet hizmet)
@@ -81,7 +78,6 @@ namespace FitnessCenterApp.Controllers
             return View(hizmet);
         }
 
-        // GET: Hizmet/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
@@ -95,7 +91,6 @@ namespace FitnessCenterApp.Controllers
             return View(hizmet);
         }
 
-        // POST: Hizmet/Delete/5  ✅ حذف فعلي + حذف Randevular التابعة
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -106,16 +101,12 @@ namespace FitnessCenterApp.Controllers
 
             if (hizmet == null) return RedirectToAction(nameof(Index));
 
-            // 1) احذف كل randevular التابعة
             var ilgiliRandevular = await _context.Randevular
                 .Where(r => r.HizmetId == id)
                 .ToListAsync();
             _context.Randevular.RemoveRange(ilgiliRandevular);
 
-            // 2) افصل علاقات many-to-many احتياطياً
             hizmet.Antrenorler.Clear();
-
-            // 3) احذف الخدمة نفسها
             _context.Hizmetler.Remove(hizmet);
 
             await _context.SaveChangesAsync();
