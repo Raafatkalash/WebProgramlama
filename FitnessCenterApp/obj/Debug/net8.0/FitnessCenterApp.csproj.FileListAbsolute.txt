@@ -141,8 +141,8 @@ C:\Users\raftk\OneDrive\Desktop\webprojects\WebProgramlama\FitnessCenterApp\obj\
 C:\Users\raftk\OneDrive\Desktop\webprojects\WebProgramlama\FitnessCenterApp\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
 C:\Users\raftk\OneDrive\Desktop\Saü\Nesnedaiprıogram\webprojects\WebProgramlama\FitnessCenterApp\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\raftk\OneDrive\Desktop\Saü\Nesnedaiprıogram\webprojects\WebProgramlama\FitnessCenterApp\bin\Debug\net8.0\appsettings.json
-C:\Users\raftk\OneDrive\Desktop\Saü\Nesnedaiprıogram\webprojects\WebProgramlama\FitnessCenterApp\bin\Debug\net8.0\FitnessCenterApp.staticwebassets.endpoints.json
 C:\Users\raftk\OneDrive\Desktop\Saü\Nesnedaiprıogram\webprojects\WebProgramlama\FitnessCenterApp\bin\Debug\net8.0\FitnessCenterApp.staticwebassets.runtime.json
+C:\Users\raftk\OneDrive\Desktop\Saü\Nesnedaiprıogram\webprojects\WebProgramlama\FitnessCenterApp\bin\Debug\net8.0\FitnessCenterApp.staticwebassets.endpoints.json
 C:\Users\raftk\OneDrive\Desktop\Saü\Nesnedaiprıogram\webprojects\WebProgramlama\FitnessCenterApp\bin\Debug\net8.0\FitnessCenterApp.exe
 C:\Users\raftk\OneDrive\Desktop\Saü\Nesnedaiprıogram\webprojects\WebProgramlama\FitnessCenterApp\bin\Debug\net8.0\FitnessCenterApp.deps.json
 C:\Users\raftk\OneDrive\Desktop\Saü\Nesnedaiprıogram\webprojects\WebProgramlama\FitnessCenterApp\bin\Debug\net8.0\FitnessCenterApp.runtimeconfig.json

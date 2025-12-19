@@ -41,7 +41,7 @@
 
     <div class="mb-3">
         <label asp-for="SalonId" class="form-label">Salon</label>
-        <select asp-for="SalonId" class="form-select" asp-items="(SelectList)ViewData["SalonId"]">
+        <select asp-for="SalonId" class="form-select" asp-items="ViewBag.SalonId">
             <option value="">Salon seçiniz</option>
         </select>
         <span asp-validation-for="SalonId" class="text-danger"></span>
@@ -49,12 +49,9 @@
 
     <div class="mb-3">
         <label class="form-label">Hizmetler</label>
-        <select class="form-select"
-                name="selectedHizmetler"
-                multiple
-                size="6"
-                asp-items="(MultiSelectList)ViewData["Hizmetler"]">
-        </select>
+        <select name="HizmetIds" class="form-select" multiple size="6" asp-items="ViewBag.HizmetList"></select>
+        <span class="text-danger">@Html.ValidationMessage("HizmetIds")</span>
+        <div class="form-text">CTRL ile birden fazla hizmet seçebilirsiniz.</div>
     </div>
 
     <div class="mb-3">

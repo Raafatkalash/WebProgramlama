@@ -1,7 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using FitnessCenterApp.Data;
 using FitnessCenterApp.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -22,55 +22,66 @@ namespace FitnessCenterApp.Controllers
         // GET: Antrenor
         public async Task<IActionResult> Index()
         {
-            var antrenorler = await _context.Antrenorler
+            var list = await _context.Antrenorler
                 .Include(a => a.Salon)
                 .Include(a => a.Hizmetler)
+                .OrderBy(a => a.Ad)
+                .ThenBy(a => a.Soyad)
                 .ToListAsync();
 
-            return View(antrenorler);
+            return View(list);
         }
 
         // GET: Antrenor/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["SalonId"] = new SelectList(_context.Salonlar, "Id", "Ad");
-            ViewData["Hizmetler"] = new MultiSelectList(_context.Hizmetler, "Id", "Ad");
+            await FillDropdownsForAntrenorAsync(selectedSalonId: null, selectedHizmetIds: null);
             return View();
         }
 
         // POST: Antrenor/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(
-            Antrenor antrenor,
-            int[] selectedHizmetler,     // لو View اسمها selectedHizmetler
-            int[] Hizmetler              // لو View اسمها Hizmetler
-        )
+        public async Task<IActionResult> Create(Antrenor antrenor, int[] HizmetIds)
         {
-            // ✅ دعم الاسمين: selectedHizmetler أو Hizmetler
-            var secilenIds = (selectedHizmetler != null && selectedHizmetler.Length > 0)
-                ? selectedHizmetler
-                : (Hizmetler ?? Array.Empty<int>());
+            // Validations
+            if (antrenor.SalonId <= 0)
+                ModelState.AddModelError("SalonId", "Salon alanı zorunludur.");
 
-            // ✅ salon لازم
-            if (antrenor.SalonId == 0)
-                ModelState.AddModelError("SalonId", "Salon seçiniz.");
+            if (HizmetIds == null || HizmetIds.Length == 0)
+                ModelState.AddModelError("HizmetIds", "En az 1 hizmet seçmelisiniz.");
 
-            if (!ModelState.IsValid)
+            // Hizmetler salon ile uyumlu mu?
+            if (ModelState.IsValid)
             {
-                ViewData["SalonId"] = new SelectList(_context.Salonlar, "Id", "Ad", antrenor.SalonId);
-                ViewData["Hizmetler"] = new MultiSelectList(_context.Hizmetler, "Id", "Ad", secilenIds);
-                return View(antrenor);
+                var secilenHizmetler = await _context.Hizmetler
+                    .Where(h => HizmetIds.Contains(h.Id))
+                    .ToListAsync();
+
+                // Seçilen hizmetler boşsa
+                if (secilenHizmetler.Count == 0)
+                {
+                    ModelState.AddModelError("HizmetIds", "Seçilen hizmetler bulunamadı.");
+                }
+                else
+                {
+                    // Salon uyumu kontrolü
+                    bool salonUyumluDegil = secilenHizmetler.Any(h => h.SalonId != antrenor.SalonId);
+                    if (salonUyumluDegil)
+                        ModelState.AddModelError("HizmetIds", "Seçilen hizmetlerden bazıları bu salona ait değil.");
+
+                    if (ModelState.IsValid)
+                    {
+                        antrenor.Hizmetler = secilenHizmetler;
+                        _context.Antrenorler.Add(antrenor);
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
             }
 
-            // ✅ احفظ علاقات الخدمات
-            antrenor.Hizmetler = await _context.Hizmetler
-                .Where(h => secilenIds.Contains(h.Id))
-                .ToListAsync();
-
-            _context.Antrenorler.Add(antrenor);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            await FillDropdownsForAntrenorAsync(antrenor.SalonId, HizmetIds);
+            return View(antrenor);
         }
 
         // GET: Antrenor/Edit/5
@@ -84,13 +95,8 @@ namespace FitnessCenterApp.Controllers
 
             if (antrenor == null) return NotFound();
 
-            ViewData["SalonId"] = new SelectList(_context.Salonlar, "Id", "Ad", antrenor.SalonId);
-            ViewData["Hizmetler"] = new MultiSelectList(
-                _context.Hizmetler,
-                "Id",
-                "Ad",
-                antrenor.Hizmetler.Select(h => h.Id).ToArray()
-            );
+            var selectedHizmetIds = antrenor.Hizmetler?.Select(h => h.Id).ToArray() ?? Array.Empty<int>();
+            await FillDropdownsForAntrenorAsync(antrenor.SalonId, selectedHizmetIds);
 
             return View(antrenor);
         }
@@ -98,14 +104,15 @@ namespace FitnessCenterApp.Controllers
         // POST: Antrenor/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(
-            int id,
-            Antrenor antrenor,
-            int[] selectedHizmetler,     // لو View اسمها selectedHizmetler
-            int[] Hizmetler              // لو View اسمها Hizmetler
-        )
+        public async Task<IActionResult> Edit(int id, Antrenor antrenor, int[] HizmetIds)
         {
             if (id != antrenor.Id) return NotFound();
+
+            if (antrenor.SalonId <= 0)
+                ModelState.AddModelError("SalonId", "Salon alanı zorunludur.");
+
+            if (HizmetIds == null || HizmetIds.Length == 0)
+                ModelState.AddModelError("HizmetIds", "En az 1 hizmet seçmelisiniz.");
 
             var mevcut = await _context.Antrenorler
                 .Include(a => a.Hizmetler)
@@ -113,43 +120,50 @@ namespace FitnessCenterApp.Controllers
 
             if (mevcut == null) return NotFound();
 
-            var secilenIds = (selectedHizmetler != null && selectedHizmetler.Length > 0)
-                ? selectedHizmetler
-                : (Hizmetler ?? Array.Empty<int>());
-
-            if (antrenor.SalonId == 0)
-                ModelState.AddModelError("SalonId", "Salon seçiniz.");
-
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                ViewData["SalonId"] = new SelectList(_context.Salonlar, "Id", "Ad", antrenor.SalonId);
-                ViewData["Hizmetler"] = new MultiSelectList(_context.Hizmetler, "Id", "Ad", secilenIds);
-                return View(antrenor);
+                var secilenHizmetler = await _context.Hizmetler
+                    .Where(h => HizmetIds.Contains(h.Id))
+                    .ToListAsync();
+
+                if (secilenHizmetler.Count == 0)
+                {
+                    ModelState.AddModelError("HizmetIds", "Seçilen hizmetler bulunamadı.");
+                }
+                else
+                {
+                    bool salonUyumluDegil = secilenHizmetler.Any(h => h.SalonId != antrenor.SalonId);
+                    if (salonUyumluDegil)
+                        ModelState.AddModelError("HizmetIds", "Seçilen hizmetlerden bazıları bu salona ait değil.");
+
+                    if (ModelState.IsValid)
+                    {
+                        // Scalar fields
+                        mevcut.Ad = antrenor.Ad;
+                        mevcut.Soyad = antrenor.Soyad;
+                        mevcut.UzmanlikAlani = antrenor.UzmanlikAlani;
+                        mevcut.Telefon = antrenor.Telefon;
+                        mevcut.Email = antrenor.Email;
+                        mevcut.SalonId = antrenor.SalonId;
+                        mevcut.MusaitBaslangic = antrenor.MusaitBaslangic;
+                        mevcut.MusaitBitis = antrenor.MusaitBitis;
+
+                        // Update many-to-many
+                        mevcut.Hizmetler.Clear();
+                        foreach (var h in secilenHizmetler)
+                            mevcut.Hizmetler.Add(h);
+
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
             }
 
-            // ✅ تحديث الحقول العادية
-            mevcut.Ad = antrenor.Ad;
-            mevcut.Soyad = antrenor.Soyad;
-            mevcut.UzmanlikAlani = antrenor.UzmanlikAlani;
-            mevcut.Telefon = antrenor.Telefon;
-            mevcut.Email = antrenor.Email;
-            mevcut.SalonId = antrenor.SalonId;
-            mevcut.MusaitBaslangic = antrenor.MusaitBaslangic;
-            mevcut.MusaitBitis = antrenor.MusaitBitis;
-
-            // ✅ تحديث علاقة الخدمات (many-to-many)
-            mevcut.Hizmetler.Clear();
-            var yeniHizmetler = await _context.Hizmetler
-                .Where(h => secilenIds.Contains(h.Id))
-                .ToListAsync();
-            foreach (var h in yeniHizmetler)
-                mevcut.Hizmetler.Add(h);
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            await FillDropdownsForAntrenorAsync(antrenor.SalonId, HizmetIds);
+            return View(antrenor);
         }
 
-        // GET: Antrenor/Delete/5  (صفحة تأكيد)
+        // GET: Antrenor/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
@@ -164,7 +178,7 @@ namespace FitnessCenterApp.Controllers
             return View(antrenor);
         }
 
-        // POST: Antrenor/Delete/5  (حذف فعلي)
+        // POST: Antrenor/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -175,29 +189,47 @@ namespace FitnessCenterApp.Controllers
 
             if (antrenor == null) return RedirectToAction(nameof(Index));
 
-            try
+            // إذا عندك Randevular مرتبطة بالمدرب، ممكن تمنع الحذف أو تحذفها/تلغيها حسب قرارك.
+            bool hasRandevu = await _context.Randevular.AnyAsync(r => r.AntrenorId == id && !r.IptalEdildi);
+            if (hasRandevu)
             {
-                // ✅ إذا في رandevu مرتبط بالمدرب: نحذفهم فعلياً لتجنب FK error
-                var randevular = await _context.Randevular
-                    .Where(r => r.AntrenorId == id)
-                    .ToListAsync();
-                if (randevular.Count > 0)
-                    _context.Randevular.RemoveRange(randevular);
-
-                // ✅ امسح الربط مع الخدمات
-                antrenor.Hizmetler.Clear();
-
-                _context.Antrenorler.Remove(antrenor);
-                await _context.SaveChangesAsync();
-
-                TempData["Success"] = "Antrenör başarıyla silindi.";
-            }
-            catch (DbUpdateException)
-            {
-                TempData["Error"] = "Bu kayıt silinemedi (ilişkili kayıtlar var).";
+                TempData["Error"] = "Bu antrenörün aktif randevuları olduğu için silinemez. Önce randevuları iptal ediniz.";
+                return RedirectToAction(nameof(Index));
             }
 
+            antrenor.Hizmetler.Clear();
+            _context.Antrenorler.Remove(antrenor);
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        // Helpers
+        private async Task FillDropdownsForAntrenorAsync(int? selectedSalonId, int[]? selectedHizmetIds)
+        {
+            ViewBag.SalonId = new SelectList(
+                await _context.Salonlar.OrderBy(s => s.Ad).ToListAsync(),
+                "Id", "Ad",
+                selectedSalonId
+            );
+
+            var hizmetlerQuery = _context.Hizmetler.AsQueryable();
+
+            // إذا بدك تعرض فقط خدمات الصالة المختارة:
+            if (selectedSalonId.HasValue && selectedSalonId.Value > 0)
+                hizmetlerQuery = hizmetlerQuery.Where(h => h.SalonId == selectedSalonId.Value);
+
+            var hizmetler = await hizmetlerQuery
+                .OrderBy(h => h.Ad)
+                .ToListAsync();
+
+            var selectedSet = (selectedHizmetIds ?? Array.Empty<int>()).ToHashSet();
+
+            ViewBag.HizmetList = hizmetler.Select(h => new SelectListItem
+            {
+                Value = h.Id.ToString(),
+                Text = h.Ad,
+                Selected = selectedSet.Contains(h.Id)
+            }).ToList();
         }
     }
 }
