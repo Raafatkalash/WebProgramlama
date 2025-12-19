@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitnessCenterApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251218022823_FinalFix")]
-    partial class FinalFix
+    [Migration("20251219203759_AddIdentityTables_v2")]
+    partial class AddIdentityTables_v2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -96,7 +96,8 @@ namespace FitnessCenterApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Aciklama")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Ad")
                         .IsRequired()
@@ -110,6 +111,7 @@ namespace FitnessCenterApp.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Ucret")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");

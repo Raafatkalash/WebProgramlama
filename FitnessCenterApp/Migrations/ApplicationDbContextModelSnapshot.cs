@@ -93,7 +93,8 @@ namespace FitnessCenterApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Aciklama")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Ad")
                         .IsRequired()
@@ -107,6 +108,7 @@ namespace FitnessCenterApp.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Ucret")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");

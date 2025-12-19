@@ -1,8 +1,8 @@
+using System.Linq;
 using FitnessCenterApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace FitnessCenterApp.Data
 {
@@ -34,6 +34,10 @@ namespace FitnessCenterApp.Data
             modelBuilder.Entity<Antrenor>()
                 .HasMany(a => a.Hizmetler)
                 .WithMany(h => h.Antrenorler);
+            modelBuilder.Entity<Hizmet>()
+                .Property(h => h.Ucret)
+                .HasPrecision(18, 2);
+
         }
     }
 }

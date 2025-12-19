@@ -6,138 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FitnessCenterApp.Migrations
 {
     /// <inheritdoc />
-    public partial class FinalFix : Migration
+    public partial class AddIdentityTables_v2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Hizmetler_Salonlar_SalonId",
-                table: "Hizmetler");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Randevular_Antrenorler_AntrenorId",
-                table: "Randevular");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Randevular_Salonlar_SalonId",
-                table: "Randevular");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Randevular_Uyeler_UyeId",
-                table: "Randevular");
-
-            migrationBuilder.AddColumn<TimeSpan>(
-                name: "AcilisSaati",
-                table: "Salonlar",
-                type: "time",
-                nullable: false,
-                defaultValue: new TimeSpan(0, 0, 0, 0, 0));
-
-            migrationBuilder.AddColumn<TimeSpan>(
-                name: "KapanisSaati",
-                table: "Salonlar",
-                type: "time",
-                nullable: false,
-                defaultValue: new TimeSpan(0, 0, 0, 0, 0));
-
-            migrationBuilder.AddColumn<DateTime>(
-                name: "BitisTarihSaat",
-                table: "Randevular",
-                type: "datetime2",
-                nullable: false,
-                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
-
-            migrationBuilder.AddColumn<string>(
-                name: "HizmetAdi",
-                table: "Randevular",
-                type: "nvarchar(100)",
-                maxLength: 100,
-                nullable: false,
-                defaultValue: "");
-
-            migrationBuilder.AddColumn<int>(
-                name: "HizmetSureDakika",
-                table: "Randevular",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
-
-            migrationBuilder.AddColumn<decimal>(
-                name: "HizmetUcret",
-                table: "Randevular",
-                type: "decimal(18,2)",
-                nullable: false,
-                defaultValue: 0m);
-
-            migrationBuilder.AddColumn<bool>(
-                name: "IptalEdildi",
-                table: "Randevular",
-                type: "bit",
-                nullable: false,
-                defaultValue: false);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Ad",
-                table: "Hizmetler",
-                type: "nvarchar(100)",
-                maxLength: 100,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)");
-
-            migrationBuilder.AddColumn<int>(
-                name: "SureDakika",
-                table: "Hizmetler",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
-
-            migrationBuilder.AddColumn<TimeSpan>(
-                name: "MusaitBaslangic",
-                table: "Antrenorler",
-                type: "time",
-                nullable: false,
-                defaultValue: new TimeSpan(0, 0, 0, 0, 0));
-
-            migrationBuilder.AddColumn<TimeSpan>(
-                name: "MusaitBitis",
-                table: "Antrenorler",
-                type: "time",
-                nullable: false,
-                defaultValue: new TimeSpan(0, 0, 0, 0, 0));
-
-            migrationBuilder.AddColumn<int>(
-                name: "SalonId",
-                table: "Antrenorler",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
-
-            migrationBuilder.CreateTable(
-                name: "AntrenorHizmet",
-                columns: table => new
-                {
-                    AntrenorlerId = table.Column<int>(type: "int", nullable: false),
-                    HizmetlerId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AntrenorHizmet", x => new { x.AntrenorlerId, x.HizmetlerId });
-                    table.ForeignKey(
-                        name: "FK_AntrenorHizmet_Antrenorler_AntrenorlerId",
-                        column: x => x.AntrenorlerId,
-                        principalTable: "Antrenorler",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_AntrenorHizmet_Hizmetler_HizmetlerId",
-                        column: x => x.HizmetlerId,
-                        principalTable: "Hizmetler",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -175,6 +48,41 @@ namespace FitnessCenterApp.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Salonlar",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Ad = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Sehir = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Adres = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Telefon = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    Aktif = table.Column<bool>(type: "bit", nullable: false),
+                    AcilisSaati = table.Column<TimeSpan>(type: "time", nullable: false),
+                    KapanisSaati = table.Column<TimeSpan>(type: "time", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Salonlar", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Uyeler",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Ad = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Soyad = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Telefon = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Uyeler", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -283,15 +191,136 @@ namespace FitnessCenterApp.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Antrenorler_SalonId",
-                table: "Antrenorler",
-                column: "SalonId");
+            migrationBuilder.CreateTable(
+                name: "Antrenorler",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Ad = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Soyad = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    UzmanlikAlani = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Telefon = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    SalonId = table.Column<int>(type: "int", nullable: false),
+                    MusaitBaslangic = table.Column<TimeSpan>(type: "time", nullable: false),
+                    MusaitBitis = table.Column<TimeSpan>(type: "time", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Antrenorler", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Antrenorler_Salonlar_SalonId",
+                        column: x => x.SalonId,
+                        principalTable: "Salonlar",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Hizmetler",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Ad = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Aciklama = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    SureDakika = table.Column<int>(type: "int", nullable: false),
+                    Ucret = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    SalonId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Hizmetler", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Hizmetler_Salonlar_SalonId",
+                        column: x => x.SalonId,
+                        principalTable: "Salonlar",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AntrenorHizmet",
+                columns: table => new
+                {
+                    AntrenorlerId = table.Column<int>(type: "int", nullable: false),
+                    HizmetlerId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AntrenorHizmet", x => new { x.AntrenorlerId, x.HizmetlerId });
+                    table.ForeignKey(
+                        name: "FK_AntrenorHizmet_Antrenorler_AntrenorlerId",
+                        column: x => x.AntrenorlerId,
+                        principalTable: "Antrenorler",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AntrenorHizmet_Hizmetler_HizmetlerId",
+                        column: x => x.HizmetlerId,
+                        principalTable: "Hizmetler",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Randevular",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UyeId = table.Column<int>(type: "int", nullable: false),
+                    AntrenorId = table.Column<int>(type: "int", nullable: false),
+                    SalonId = table.Column<int>(type: "int", nullable: false),
+                    HizmetId = table.Column<int>(type: "int", nullable: false),
+                    TarihSaat = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BitisTarihSaat = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Not = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Onayli = table.Column<bool>(type: "bit", nullable: false),
+                    IptalEdildi = table.Column<bool>(type: "bit", nullable: false),
+                    HizmetAdi = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    HizmetSureDakika = table.Column<int>(type: "int", nullable: false),
+                    HizmetUcret = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Randevular", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Randevular_Antrenorler_AntrenorId",
+                        column: x => x.AntrenorId,
+                        principalTable: "Antrenorler",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Randevular_Hizmetler_HizmetId",
+                        column: x => x.HizmetId,
+                        principalTable: "Hizmetler",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Randevular_Salonlar_SalonId",
+                        column: x => x.SalonId,
+                        principalTable: "Salonlar",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Randevular_Uyeler_UyeId",
+                        column: x => x.UyeId,
+                        principalTable: "Uyeler",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AntrenorHizmet_HizmetlerId",
                 table: "AntrenorHizmet",
                 column: "HizmetlerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Antrenorler_SalonId",
+                table: "Antrenorler",
+                column: "SalonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -332,70 +361,35 @@ namespace FitnessCenterApp.Migrations
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Antrenorler_Salonlar_SalonId",
-                table: "Antrenorler",
-                column: "SalonId",
-                principalTable: "Salonlar",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Hizmetler_Salonlar_SalonId",
+            migrationBuilder.CreateIndex(
+                name: "IX_Hizmetler_SalonId",
                 table: "Hizmetler",
-                column: "SalonId",
-                principalTable: "Salonlar",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
+                column: "SalonId");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Randevular_Antrenorler_AntrenorId",
+            migrationBuilder.CreateIndex(
+                name: "IX_Randevular_AntrenorId",
                 table: "Randevular",
-                column: "AntrenorId",
-                principalTable: "Antrenorler",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
+                column: "AntrenorId");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Randevular_Salonlar_SalonId",
+            migrationBuilder.CreateIndex(
+                name: "IX_Randevular_HizmetId",
                 table: "Randevular",
-                column: "SalonId",
-                principalTable: "Salonlar",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
+                column: "HizmetId");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Randevular_Uyeler_UyeId",
+            migrationBuilder.CreateIndex(
+                name: "IX_Randevular_SalonId",
                 table: "Randevular",
-                column: "UyeId",
-                principalTable: "Uyeler",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
+                column: "SalonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Randevular_UyeId",
+                table: "Randevular",
+                column: "UyeId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Antrenorler_Salonlar_SalonId",
-                table: "Antrenorler");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Hizmetler_Salonlar_SalonId",
-                table: "Hizmetler");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Randevular_Antrenorler_AntrenorId",
-                table: "Randevular");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Randevular_Salonlar_SalonId",
-                table: "Randevular");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Randevular_Uyeler_UyeId",
-                table: "Randevular");
-
             migrationBuilder.DropTable(
                 name: "AntrenorHizmet");
 
@@ -415,99 +409,25 @@ namespace FitnessCenterApp.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Randevular");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
-            migrationBuilder.DropIndex(
-                name: "IX_Antrenorler_SalonId",
-                table: "Antrenorler");
+            migrationBuilder.DropTable(
+                name: "Antrenorler");
 
-            migrationBuilder.DropColumn(
-                name: "AcilisSaati",
-                table: "Salonlar");
+            migrationBuilder.DropTable(
+                name: "Hizmetler");
 
-            migrationBuilder.DropColumn(
-                name: "KapanisSaati",
-                table: "Salonlar");
+            migrationBuilder.DropTable(
+                name: "Uyeler");
 
-            migrationBuilder.DropColumn(
-                name: "BitisTarihSaat",
-                table: "Randevular");
-
-            migrationBuilder.DropColumn(
-                name: "HizmetAdi",
-                table: "Randevular");
-
-            migrationBuilder.DropColumn(
-                name: "HizmetSureDakika",
-                table: "Randevular");
-
-            migrationBuilder.DropColumn(
-                name: "HizmetUcret",
-                table: "Randevular");
-
-            migrationBuilder.DropColumn(
-                name: "IptalEdildi",
-                table: "Randevular");
-
-            migrationBuilder.DropColumn(
-                name: "SureDakika",
-                table: "Hizmetler");
-
-            migrationBuilder.DropColumn(
-                name: "MusaitBaslangic",
-                table: "Antrenorler");
-
-            migrationBuilder.DropColumn(
-                name: "MusaitBitis",
-                table: "Antrenorler");
-
-            migrationBuilder.DropColumn(
-                name: "SalonId",
-                table: "Antrenorler");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Ad",
-                table: "Hizmetler",
-                type: "nvarchar(max)",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(100)",
-                oldMaxLength: 100);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Hizmetler_Salonlar_SalonId",
-                table: "Hizmetler",
-                column: "SalonId",
-                principalTable: "Salonlar",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Randevular_Antrenorler_AntrenorId",
-                table: "Randevular",
-                column: "AntrenorId",
-                principalTable: "Antrenorler",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Randevular_Salonlar_SalonId",
-                table: "Randevular",
-                column: "SalonId",
-                principalTable: "Salonlar",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Randevular_Uyeler_UyeId",
-                table: "Randevular",
-                column: "UyeId",
-                principalTable: "Uyeler",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+            migrationBuilder.DropTable(
+                name: "Salonlar");
         }
     }
 }
