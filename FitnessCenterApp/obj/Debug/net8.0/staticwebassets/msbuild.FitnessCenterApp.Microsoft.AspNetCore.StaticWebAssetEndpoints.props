@@ -28,13 +28,13 @@
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\FitnessCenterApp.v89gg0lpmh.bundle.scp.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
       <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-zzIQqzySfJMZxYbgJpKSzruHTkyEbc80nY34dTm709E="}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"1134"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022zzIQqzySfJMZxYbgJpKSzruHTkyEbc80nY34dTm709E=\u0022"},{"Name":"Last-Modified","Value":"Fri, 19 Dec 2025 20:30:00 GMT"}]]]></ResponseHeaders>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"1134"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022zzIQqzySfJMZxYbgJpKSzruHTkyEbc80nY34dTm709E=\u0022"},{"Name":"Last-Modified","Value":"Sat, 20 Dec 2025 05:39:15 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/FitnessCenterApp/FitnessCenterApp.v89gg0lpmh.bundle.scp.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\FitnessCenterApp.v89gg0lpmh.bundle.scp.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
       <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"v89gg0lpmh"},{"Name":"integrity","Value":"sha256-zzIQqzySfJMZxYbgJpKSzruHTkyEbc80nY34dTm709E="},{"Name":"label","Value":"_content/FitnessCenterApp/FitnessCenterApp.bundle.scp.css"}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"1134"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022zzIQqzySfJMZxYbgJpKSzruHTkyEbc80nY34dTm709E=\u0022"},{"Name":"Last-Modified","Value":"Fri, 19 Dec 2025 20:30:00 GMT"}]]]></ResponseHeaders>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"1134"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022zzIQqzySfJMZxYbgJpKSzruHTkyEbc80nY34dTm709E=\u0022"},{"Name":"Last-Modified","Value":"Sat, 20 Dec 2025 05:39:15 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/FitnessCenterApp/js/site.js">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\js\site.js'))</AssetFile>

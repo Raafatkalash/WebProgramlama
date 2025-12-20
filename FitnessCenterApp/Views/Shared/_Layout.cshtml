@@ -26,13 +26,12 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navbarMain">
-
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
 
-                    @* ✅ Admin Panel (CRUD) فقط Admin *@
+                    @* ✅ Admin Panel فقط للـ Admin *@
                     @if (User.IsInRole("Admin"))
                     {
                         <li class="nav-item dropdown">
@@ -57,39 +56,17 @@
                         </li>
                     }
 
-                    @* ✅ REST API (Admin) بدون أمثلة محرجة مثل uyeId=1 *@
+                    @* ✅ Raporlar API: خيار واحد فقط (بالكبسة) للـ Admin *@
                     @if (User.IsInRole("Admin"))
                     {
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="raporDropdown"
-                               role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Raporlar (REST API)
+                        <li class="nav-item">
+                            <a class="nav-link" href="/api/rapor/antrenor-randevu-sayisi" target="_blank">
+                                Raporlar API
                             </a>
-
-                            <ul class="dropdown-menu" aria-labelledby="raporDropdown">
-                                <li>
-                                    <a class="dropdown-item"
-                                       href="/api/rapor/antrenor-randevu-sayisi"
-                                       target="_blank">
-                                        Antrenör Randevu Sayısı (JSON)
-                                    </a>
-                                </li>
-
-                                <li><hr class="dropdown-divider" /></li>
-
-                                @* ✅ صفحة UI للتقارير (بدون hardcode) — إذا ما عملتها بعد، احذف هذا السطر مؤقتاً *@
-                                <li>
-                                    <a class="dropdown-item"
-                                       asp-controller="Raporlama"
-                                       asp-action="Index">
-                                        Raporlar (UI)
-                                    </a>
-                                </li>
-                            </ul>
                         </li>
                     }
 
-                    @* ✅ AI Integration (مسجلين) — إذا ما عندك AiController احذف هذا السطر *@
+                    @* ✅ AI Integration (مسجلين) *@
                     @if (User.Identity?.IsAuthenticated == true)
                     {
                         <li class="nav-item">
@@ -105,7 +82,6 @@
                         </a>
                     </li>
 
-                    @* ✅ Login / Register / Logout *@
                     @if (User.Identity?.IsAuthenticated == true)
                     {
                         <li class="nav-item">
@@ -113,7 +89,6 @@
                                 <i class="bi bi-person-circle me-1"></i>@User.Identity!.Name
                             </span>
                         </li>
-
                         <li class="nav-item">
                             <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
                                 @Html.AntiForgeryToken()
@@ -131,7 +106,6 @@
                         </li>
                     }
                 </ul>
-
             </div>
         </div>
     </nav>

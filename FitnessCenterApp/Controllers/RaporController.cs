@@ -20,28 +20,49 @@ namespace FitnessCenterApp.Controllers
         }
 
         // GET: /api/rapor/antrenor-randevu-sayisi
-        // ✅ LINQ + REST API + DB
+        // ✅ يعرض كل الأنترنور حتى لو 0 رانديفو
         [HttpGet("antrenor-randevu-sayisi")]
         public async Task<IActionResult> AntrenorRandevuSayisi()
         {
-            var sonuc = await _context.Randevular
-                .AsNoTracking()
-                .Where(r => !r.IptalEdildi)
-                .GroupBy(r => new { r.AntrenorId, r.Antrenor.Ad, r.Antrenor.Soyad })
-                .Select(g => new
+            var sonuc = await (
+                from a in _context.Antrenorler.AsNoTracking()
+                join r in _context.Randevular.AsNoTracking().Where(x => !x.IptalEdildi)
+                    on a.Id equals r.AntrenorId into rg
+                select new
                 {
-                    antrenorId = g.Key.AntrenorId,
-                    antrenorAdSoyad = g.Key.Ad + " " + g.Key.Soyad,
-                    randevuSayisi = g.Count()
-                })
-                .OrderByDescending(x => x.randevuSayisi)
-                .ToListAsync();
+                    antrenorId = a.Id,
+                    antrenorAdSoyad = a.Ad + " " + a.Soyad,
+                    randevuSayisi = rg.Count()
+                }
+            )
+            .OrderByDescending(x => x.randevuSayisi)
+            .ThenBy(x => x.antrenorAdSoyad)
+            .ToListAsync();
 
             return Ok(sonuc);
         }
 
-        // GET: /api/rapor/uye-randevular/1
-        // ✅ LINQ filtering (uyeId)
+        // GET: /api/rapor/uyeler
+        // ✅ لتعرف الـ uyeId الحقيقي من جدول Uyeler
+        [HttpGet("uyeler")]
+        public async Task<IActionResult> Uyeler()
+        {
+            var uyeler = await _context.Uyeler
+                .AsNoTracking()
+                .OrderBy(u => u.Id)
+                .Select(u => new
+                {
+                    uyeId = u.Id,
+                    adSoyad = u.Ad + " " + u.Soyad,
+                    email = u.Email
+                })
+                .ToListAsync();
+
+            return Ok(uyeler);
+        }
+
+        // GET: /api/rapor/uye-randevular/5
+        // ✅ لازم تمرر UyeId الصحيح (مو شرط 1)
         [HttpGet("uye-randevular/{uyeId:int}")]
         public async Task<IActionResult> UyeRandevular(int uyeId)
         {
@@ -55,7 +76,8 @@ namespace FitnessCenterApp.Controllers
                     tarihSaat = r.TarihSaat,
                     not = r.Not,
                     antrenor = r.Antrenor.Ad + " " + r.Antrenor.Soyad,
-                    salon = r.Salon.Ad
+                    salon = r.Salon.Ad,
+                    hizmet = r.Hizmet.Ad
                 })
                 .ToListAsync();
 

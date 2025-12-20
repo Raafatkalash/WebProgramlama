@@ -1,141 +1,17 @@
 @{
     ViewData["Title"] = "Raporlar";
-    var uyeler = ViewBag.Uyeler as List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>;
 }
 
-<h2 class="mb-4">Raporlar</h2>
+<h2>Raporlar</h2>
 
-<div class="row g-4">
+<div class="list-group">
+    <a class="list-group-item list-group-item-action"
+       href="/api/rapor/antrenor-randevu-sayisi" target="_blank">
+        Antrenör Randevu Sayısı (JSON)
+    </a>
 
-    <div class="col-lg-6">
-        <div class="card shadow-sm">
-            <div class="card-header fw-bold">
-                Antrenör Randevu Sayısı
-            </div>
-            <div class="card-body">
-                <button class="btn btn-primary btn-sm mb-3" id="btnLoadAntrenor">
-                    Listeyi Getir
-                </button>
-
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped" id="tblAntrenor">
-                        <thead>
-                            <tr>
-                                <th>Antrenör</th>
-                                <th>Randevu Sayısı</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td colspan="2" class="text-muted">Henüz yüklenmedi.</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="small text-muted">
-                    API: <code>/api/rapor/antrenor-randevu-sayisi</code>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-lg-6">
-        <div class="card shadow-sm">
-            <div class="card-header fw-bold">
-                Üye Randevuları
-            </div>
-            <div class="card-body">
-                <label class="form-label">Üye Seç</label>
-                <select class="form-select mb-3" id="uyeSelect">
-                    <option value="">-- Üye Seçiniz --</option>
-                    @foreach (var u in uyeler)
-                    {
-                        <option value="@u.Value">@u.Text</option>
-                    }
-                </select>
-
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped" id="tblUye">
-                        <thead>
-                            <tr>
-                                <th>Tarih</th>
-                                <th>Antrenör</th>
-                                <th>Salon</th>
-                                <th>Not</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td colspan="4" class="text-muted">Üye seçiniz.</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="small text-muted">
-                    API: <code>/api/rapor/uye-randevular/{uyeId}</code>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <a class="list-group-item list-group-item-action"
+       href="/api/rapor/uye-randevular/1" target="_blank">
+        Üye Randevuları (JSON) - örnek uyeId = 1
+    </a>
 </div>
-
-@section Scripts {
-<script>
-    async function loadAntrenorRapor() {
-        const tbody = document.querySelector("#tblAntrenor tbody");
-        tbody.innerHTML = `<tr><td colspan="2">Yükleniyor...</td></tr>`;
-
-        const res = await fetch("/api/rapor/antrenor-randevu-sayisi");
-        const data = await res.json();
-
-        if (!data || data.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="2" class="text-muted">Kayıt yok.</td></tr>`;
-            return;
-        }
-
-        tbody.innerHTML = "";
-        for (const x of data) {
-            tbody.innerHTML += `
-                <tr>
-                    <td>${x.antrenorAdSoyad}</td>
-                    <td>${x.randevuSayisi}</td>
-                </tr>`;
-        }
-    }
-
-    async function loadUyeRandevular(uyeId) {
-        const tbody = document.querySelector("#tblUye tbody");
-        tbody.innerHTML = `<tr><td colspan="4">Yükleniyor...</td></tr>`;
-
-        const res = await fetch("/api/rapor/uye-randevular/" + uyeId);
-        const data = await res.json();
-
-        if (!data || data.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="4" class="text-muted">Bu üyeye ait randevu yok.</td></tr>`;
-            return;
-        }
-
-        tbody.innerHTML = "";
-        for (const r of data) {
-            const dt = new Date(r.tarihSaat).toLocaleString();
-            tbody.innerHTML += `
-                <tr>
-                    <td>${dt}</td>
-                    <td>${r.antrenor}</td>
-                    <td>${r.salon}</td>
-                    <td>${r.not ?? ""}</td>
-                </tr>`;
-        }
-    }
-
-    document.getElementById("btnLoadAntrenor").addEventListener("click", loadAntrenorRapor);
-
-    document.getElementById("uyeSelect").addEventListener("change", function () {
-        const val = this.value;
-        if (!val) return;
-        loadUyeRandevular(val);
-    });
-
-    // تحميل تلقائي للمدربين عند فتح الصفحة
-    loadAntrenorRapor();
-</script>
-}
