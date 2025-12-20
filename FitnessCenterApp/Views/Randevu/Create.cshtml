@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Yeni Randevu";
+    bool isAdmin = User.IsInRole("Admin");
 }
 
 <h2 class="mb-4">Yeni Randevu</h2>
@@ -11,15 +12,23 @@
 
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <div class="mb-3">
-        <label asp-for="UyeId" class="form-label"></label>
-        <select asp-for="UyeId"
-                class="form-select"
-                asp-items="@(ViewData["UyeId"] as SelectList)">
-            <option value="">Üye seçiniz</option>
-        </select>
-        <span asp-validation-for="UyeId" class="text-danger"></span>
-    </div>
+    @* ✅ ÜyeId: Admin يختار - Üye مخفي *@
+    @if (isAdmin)
+    {
+        <div class="mb-3">
+            <label asp-for="UyeId" class="form-label"></label>
+            <select asp-for="UyeId"
+                    class="form-select"
+                    asp-items="@(ViewData["UyeId"] as SelectList)">
+                <option value="">Üye seçiniz</option>
+            </select>
+            <span asp-validation-for="UyeId" class="text-danger"></span>
+        </div>
+    }
+    else
+    {
+        <input asp-for="UyeId" type="hidden" />
+    }
 
     <div class="mb-3">
         <label asp-for="AntrenorId" class="form-label"></label>

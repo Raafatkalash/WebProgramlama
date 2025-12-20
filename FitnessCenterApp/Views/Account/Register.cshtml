@@ -2,7 +2,7 @@
     ViewData["Title"] = "Kayıt Ol";
 }
 
-<h2>Kayıt Ol</h2>
+<h2 class="mb-3">Kayıt Ol</h2>
 
 @if (ViewBag.Error != null)
 {
@@ -12,16 +12,37 @@
 <form asp-action="Register" method="post">
     @Html.AntiForgeryToken()
 
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+    <div class="mb-3">
+        <label class="form-label">Ad</label>
+        <input name="ad" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Soyad</label>
+        <input name="soyad" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Telefon</label>
+        <input name="telefon" class="form-control" />
+    </div>
+
     <div class="mb-3">
         <label class="form-label">Email</label>
-        <input name="email" class="form-control" />
+        <input name="email" type="email" class="form-control" required />
     </div>
 
     <div class="mb-3">
         <label class="form-label">Şifre</label>
-        <input name="password" type="password" class="form-control" />
+        <input name="password" type="password" class="form-control" required />
     </div>
 
     <button type="submit" class="btn btn-primary">Kayıt Ol</button>
     <a asp-action="Login" class="btn btn-secondary ms-2">Giriş</a>
 </form>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

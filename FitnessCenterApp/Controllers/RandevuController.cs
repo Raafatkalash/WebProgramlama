@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FitnessCenterApp.Controllers
 {
-    [Authorize] // لازم يكون مسجّل دخول
+    [Authorize]
     public class RandevuController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -27,13 +27,13 @@ namespace FitnessCenterApp.Controllers
         // Helpers
         // =========================
 
-        private async Task<Uye?> EnsureCurrentUyeAsync(bool createIfMissing)
+        private async Task<Uye?> GetCurrentUyeAsync()
         {
             var email = User?.Identity?.Name; // غالباً = Email
             if (string.IsNullOrWhiteSpace(email))
                 return null;
 
-            // 1) تأكيد Role = Uye لأي مستخدم ليس Admin
+            // Role kontrolü (Admin değilse Uye olsun)
             var identityUser = await _userManager.FindByEmailAsync(email);
             if (identityUser != null)
             {
@@ -44,26 +44,14 @@ namespace FitnessCenterApp.Controllers
                     await _userManager.AddToRoleAsync(identityUser, "Uye");
             }
 
-            // 2) تأكيد وجود سجل في Uyeler بنفس الإيميل
-            var uye = await _context.Uyeler.FirstOrDefaultAsync(u => u.Email == email);
-            if (uye == null && createIfMissing)
-            {
-                // اسم افتراضي من الإيميل (مقبول للمشروع)
-                var ad = email.Split('@')[0];
+            // فقط نبحث.. إنشاء Uye يكون في Register
+            return await _context.Uyeler.FirstOrDefaultAsync(u => u.Email == email);
+        }
 
-                uye = new Uye
-                {
-                    Ad = ad,
-                    Soyad = "",
-                    Telefon = "",
-                    Email = email
-                };
-
-                _context.Uyeler.Add(uye);
-                await _context.SaveChangesAsync();
-            }
-
-            return uye;
+        private IActionResult RedirectToRegisterWithError()
+        {
+            TempData["Error"] = "Üye kaydınız bulunamadı. Lütfen kayıt olun (Register).";
+            return RedirectToAction("Register", "Account");
         }
 
         private void FillDropdownsForAdmin(Randevu? r = null)
@@ -76,9 +64,7 @@ namespace FitnessCenterApp.Controllers
 
         private void FillDropdownsForUye(Uye uye, Randevu? r = null)
         {
-            // العضو لا يختار عضو آخر أبداً
             ViewData["UyeId"] = new SelectList(new[] { uye }, "Id", "AdSoyad", uye.Id);
-
             ViewData["AntrenorId"] = new SelectList(_context.Antrenorler, "Id", "AdSoyad", r?.AntrenorId);
             ViewData["SalonId"] = new SelectList(_context.Salonlar, "Id", "Ad", r?.SalonId);
             ViewData["HizmetId"] = new SelectList(_context.Hizmetler, "Id", "Ad", r?.HizmetId);
@@ -105,12 +91,9 @@ namespace FitnessCenterApp.Controllers
             }
 
             // Uye
-            var uye = await EnsureCurrentUyeAsync(createIfMissing: true);
+            var uye = await GetCurrentUyeAsync();
             if (uye == null)
-            {
-                TempData["Error"] = "Üye bilgisi alınamadı. Lütfen tekrar giriş yapın.";
-                return RedirectToAction("Index", "Home");
-            }
+                return RedirectToRegisterWithError();
 
             var list = await _context.Randevular
                 .Include(r => r.Uye)
@@ -135,13 +118,9 @@ namespace FitnessCenterApp.Controllers
                 return View(new Randevu { TarihSaat = DateTime.Now.AddMinutes(30) });
             }
 
-            // Uye
-            var uye = await EnsureCurrentUyeAsync(createIfMissing: true);
+            var uye = await GetCurrentUyeAsync();
             if (uye == null)
-            {
-                TempData["Error"] = "Bu kullanıcı için Üye kaydı bulunamadı.";
-                return RedirectToAction(nameof(Index));
-            }
+                return RedirectToRegisterWithError();
 
             var r = new Randevu
             {
@@ -160,20 +139,18 @@ namespace FitnessCenterApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Randevu randevu)
         {
-            // لو Uye: نفرض UyeId الصحيح (لا يقدر يزوّر)
+            // لو Uye: نفرض UyeId الصحيح
             Uye? currentUye = null;
             if (!User.IsInRole("Admin"))
             {
-                currentUye = await EnsureCurrentUyeAsync(createIfMissing: true);
+                currentUye = await GetCurrentUyeAsync();
                 if (currentUye == null)
-                {
-                    TempData["Error"] = "Bu kullanıcı için Üye kaydı bulunamadı.";
-                    return RedirectToAction(nameof(Index));
-                }
+                    return RedirectToRegisterWithError();
+
                 randevu.UyeId = currentUye.Id;
             }
 
-            // ========= VALIDATIONS (مثل اللي عندك) =========
+            // ========= VALIDATIONS =========
 
             if (randevu.TarihSaat == default)
                 ModelState.AddModelError("TarihSaat", "Tarih seçilmedi veya format hatalı.");
@@ -203,23 +180,29 @@ namespace FitnessCenterApp.Controllers
 
             if (hizmet != null && antrenor != null && salon != null)
             {
+                // 1) Hizmet aynı salonun olmalı
                 if (hizmet.SalonId != randevu.SalonId)
                     ModelState.AddModelError("SalonId", "Seçilen hizmet bu salona ait değil.");
 
+                // 2) Antrenör bu hizmeti vermeli
                 if (!antrenor.Hizmetler.Any(h => h.Id == randevu.HizmetId))
                     ModelState.AddModelError("HizmetId", "Bu antrenör seçilen hizmeti vermiyor.");
 
+                // 3) Bitiş zamanı = başlangıç + süre
                 randevu.BitisTarihSaat = randevu.TarihSaat.AddMinutes(hizmet.SureDakika);
 
                 var bas = randevu.TarihSaat.TimeOfDay;
                 var bit = randevu.BitisTarihSaat.TimeOfDay;
 
+                // 4) Salon çalışma saatleri
                 if (bas < salon.AcilisSaati || bit > salon.KapanisSaati)
                     ModelState.AddModelError("TarihSaat", "Randevu salon çalışma saatleri dışında olamaz.");
 
+                // 5) Antrenör müsaitliği
                 if (bas < antrenor.MusaitBaslangic || bit > antrenor.MusaitBitis)
                     ModelState.AddModelError("TarihSaat", "Randevu antrenörün uygun saatleri dışında olamaz.");
 
+                // 6) Çakışma - Antrenör
                 bool cakisanAntrenor = await _context.Randevular.AnyAsync(r =>
                     !r.IptalEdildi &&
                     r.AntrenorId == randevu.AntrenorId &&
@@ -229,6 +212,7 @@ namespace FitnessCenterApp.Controllers
                 if (cakisanAntrenor)
                     ModelState.AddModelError("TarihSaat", "Bu saat aralığında bu antrenörde zaten bir randevu var.");
 
+                // 7) Çakışma - Üye
                 bool cakisanUye = await _context.Randevular.AnyAsync(r =>
                     !r.IptalEdildi &&
                     r.UyeId == randevu.UyeId &&
@@ -267,7 +251,7 @@ namespace FitnessCenterApp.Controllers
         // =========================
         // POST: Randevu/Delete (İptal)
         // Admin: أي رانديفو
-        // Uye: فقط رانديفوه + يفضّل قبل onay
+        // Uye: فقط رانديفوه
         // =========================
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -278,12 +262,11 @@ namespace FitnessCenterApp.Controllers
 
             if (!User.IsInRole("Admin"))
             {
-                var uye = await EnsureCurrentUyeAsync(createIfMissing: false);
-                if (uye == null || randevu.UyeId != uye.Id)
-                    return Forbid();
+                var uye = await GetCurrentUyeAsync();
+                if (uye == null) return RedirectToRegisterWithError();
 
-                // (اختياري) منع إلغاء بعد Onay
-                // if (randevu.Onayli) return Forbid();
+                if (randevu.UyeId != uye.Id)
+                    return Forbid();
             }
 
             randevu.IptalEdildi = true;

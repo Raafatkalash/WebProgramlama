@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
 </head>
+
 <body class="bg-light">
 <header>
     <nav class="navbar navbar-expand-lg navbar-dark shadow-sm main-navbar">
@@ -25,12 +26,13 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navbarMain">
+
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
 
-                    @* ✅ Admin Panel فقط للـ Admin *@
+                    @* ✅ Admin Panel (CRUD) فقط Admin *@
                     @if (User.IsInRole("Admin"))
                     {
                         <li class="nav-item dropdown">
@@ -47,7 +49,7 @@
                         </li>
                     }
 
-                    @* ✅ Randevu للجميع المسجلين *@
+                    @* ✅ Randevular: لكل المستخدمين المسجلين *@
                     @if (User.Identity?.IsAuthenticated == true)
                     {
                         <li class="nav-item">
@@ -55,11 +57,43 @@
                         </li>
                     }
 
-                    @* ✅ Raporlar: Admin فقط *@
+                    @* ✅ REST API (Admin) بدون أمثلة محرجة مثل uyeId=1 *@
                     @if (User.IsInRole("Admin"))
                     {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="raporDropdown"
+                               role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Raporlar (REST API)
+                            </a>
+
+                            <ul class="dropdown-menu" aria-labelledby="raporDropdown">
+                                <li>
+                                    <a class="dropdown-item"
+                                       href="/api/rapor/antrenor-randevu-sayisi"
+                                       target="_blank">
+                                        Antrenör Randevu Sayısı (JSON)
+                                    </a>
+                                </li>
+
+                                <li><hr class="dropdown-divider" /></li>
+
+                                @* ✅ صفحة UI للتقارير (بدون hardcode) — إذا ما عملتها بعد، احذف هذا السطر مؤقتاً *@
+                                <li>
+                                    <a class="dropdown-item"
+                                       asp-controller="Raporlama"
+                                       asp-action="Index">
+                                        Raporlar (UI)
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    }
+
+                    @* ✅ AI Integration (مسجلين) — إذا ما عندك AiController احذف هذا السطر *@
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
                         <li class="nav-item">
-                            <a class="nav-link" href="/api/rapor/antrenor-randevu-sayisi">Raporlar</a>
+                            <a class="nav-link" asp-controller="Ai" asp-action="Index">AI Öneri</a>
                         </li>
                     }
                 </ul>
@@ -70,10 +104,34 @@
                             <i class="bi bi-info-circle me-1"></i>Privacy
                         </a>
                     </li>
+
+                    @* ✅ Login / Register / Logout *@
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <li class="nav-item">
+                            <span class="nav-link text-white-50">
+                                <i class="bi bi-person-circle me-1"></i>@User.Identity!.Name
+                            </span>
+                        </li>
+
+                        <li class="nav-item">
+                            <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="nav-link btn btn-link text-white">Logout</button>
+                            </form>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Account" asp-action="Login">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Account" asp-action="Register">Register</a>
+                        </li>
+                    }
                 </ul>
 
-                @* ✅ Identity login/logout *@
-                <partial name="_LoginPartial" />
             </div>
         </div>
     </nav>

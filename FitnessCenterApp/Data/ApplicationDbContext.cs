@@ -1,3 +1,4 @@
+using System.Linq;
 using FitnessCenterApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -20,9 +21,9 @@ namespace FitnessCenterApp.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // ✅ حل شامل لمشكلة multiple cascade paths
+            // ✅ حل شامل لمشكلة multiple cascade paths (SQL Server)
             foreach (var fk in modelBuilder.Model.GetEntityTypes()
-                     .SelectMany(e => e.GetForeignKeys()))
+                         .SelectMany(e => e.GetForeignKeys()))
             {
                 fk.DeleteBehavior = DeleteBehavior.Restrict;
             }
@@ -32,14 +33,10 @@ namespace FitnessCenterApp.Data
                 .HasMany(a => a.Hizmetler)
                 .WithMany(h => h.Antrenorler);
 
-            // ✅ حل تحذير decimal truncation
+            // ✅ حل تحذير decimal truncation (Hizmet.Ucret)
             modelBuilder.Entity<Hizmet>()
                 .Property(h => h.Ucret)
                 .HasPrecision(18, 2);
-            modelBuilder.Entity<Hizmet>()
-               .Property(h => h.Ucret)
-             .HasPrecision(18, 2);
-
         }
     }
 }

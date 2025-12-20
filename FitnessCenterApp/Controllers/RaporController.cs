@@ -19,40 +19,43 @@ namespace FitnessCenterApp.Controllers
             _context = context;
         }
 
+        // GET: /api/rapor/antrenor-randevu-sayisi
+        // ✅ LINQ + REST API + DB
         [HttpGet("antrenor-randevu-sayisi")]
         public async Task<IActionResult> AntrenorRandevuSayisi()
         {
             var sonuc = await _context.Randevular
+                .AsNoTracking()
                 .Where(r => !r.IptalEdildi)
-                .Include(r => r.Antrenor)
                 .GroupBy(r => new { r.AntrenorId, r.Antrenor.Ad, r.Antrenor.Soyad })
                 .Select(g => new
                 {
-                    AntrenorId = g.Key.AntrenorId,
-                    AntrenorAdSoyad = g.Key.Ad + " " + g.Key.Soyad,
-                    RandevuSayisi = g.Count()
+                    antrenorId = g.Key.AntrenorId,
+                    antrenorAdSoyad = g.Key.Ad + " " + g.Key.Soyad,
+                    randevuSayisi = g.Count()
                 })
-                .OrderByDescending(x => x.RandevuSayisi)
+                .OrderByDescending(x => x.randevuSayisi)
                 .ToListAsync();
 
             return Ok(sonuc);
         }
 
+        // GET: /api/rapor/uye-randevular/1
+        // ✅ LINQ filtering (uyeId)
         [HttpGet("uye-randevular/{uyeId:int}")]
         public async Task<IActionResult> UyeRandevular(int uyeId)
         {
             var randevular = await _context.Randevular
+                .AsNoTracking()
                 .Where(r => r.UyeId == uyeId && !r.IptalEdildi)
-                .Include(r => r.Antrenor)
-                .Include(r => r.Salon)
                 .OrderBy(r => r.TarihSaat)
                 .Select(r => new
                 {
-                    r.Id,
-                    r.TarihSaat,
-                    r.Not,
-                    Antrenor = r.Antrenor.Ad + " " + r.Antrenor.Soyad,
-                    Salon = r.Salon.Ad
+                    id = r.Id,
+                    tarihSaat = r.TarihSaat,
+                    not = r.Not,
+                    antrenor = r.Antrenor.Ad + " " + r.Antrenor.Soyad,
+                    salon = r.Salon.Ad
                 })
                 .ToListAsync();
 

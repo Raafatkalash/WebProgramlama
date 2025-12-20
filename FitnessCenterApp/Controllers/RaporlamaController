@@ -1,10 +1,10 @@
+using System.Linq;
+using System.Threading.Tasks;
 using FitnessCenterApp.Data;
-using FitnessCenterApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-
-
-
 
 namespace FitnessCenterApp.Controllers
 {
@@ -18,21 +18,21 @@ namespace FitnessCenterApp.Controllers
             _context = context;
         }
 
-        // GET: /Raporlama/AntrenorRandevuSayisi
-        public async Task<IActionResult> AntrenorRandevuSayisi()
+        public async Task<IActionResult> Index()
         {
-            var veri = await _context.Randevular
-                .Include(r => r.Antrenor)
-                .GroupBy(r => new { r.AntrenorId, r.Antrenor.Ad, r.Antrenor.Soyad })
-                .Select(g => new AntrenorRandevuRaporViewModel
+            // Dropdown: üyeler (مع Id ليكون واضح للأستاذ)
+            var uyeler = await _context.Uyeler
+                .AsNoTracking()
+                .OrderBy(u => u.Ad)
+                .Select(u => new SelectListItem
                 {
-                    AntrenorId = g.Key.AntrenorId,
-                    AntrenorAdSoyad = g.Key.Ad + " " + g.Key.Soyad,
-                    RandevuSayisi = g.Count()
+                    Value = u.Id.ToString(),
+                    Text = $"{u.AdSoyad} (Id={u.Id})"
                 })
                 .ToListAsync();
 
-            return View(veri);
+            ViewBag.Uyeler = uyeler;
+            return View();
         }
     }
 }
