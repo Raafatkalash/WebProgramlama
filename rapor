@@ -1,0 +1,122 @@
+FITNESS CENTER YÖNETİM VE RANDEVU SİSTEMİ
+(ASP.NET Core MVC + EF Core + SQL Server)
+
+Ders: Web Programlama
+ Dönem: 2025-2026 Güz
+ Öğrenci No: G201210590
+ Ad Soyad: RAAFAT KALASH
+ Ders Grubu: 1C
+ GitHub Linki: https://github.com/Raafatkalash/WebProgramlama
+ 
+
+1. Proje Amacı ve Kapsam
+Bu projenin amacı, Web Programlama dersinde öğrenilen ASP.NET Core MVC, Entity Framework Core, LINQ, Bootstrap ve yetkilendirme yapılarını gerçek bir senaryoda uygulayarak Spor Salonu (Fitness Center) Yönetim ve Randevu Sistemi geliştirmektir.
+Sistem şu ihtiyaçları karşılar:
+•	Salonların çalışma saatleri ve hizmet detayları yönetimi
+•	Antrenörlerin uzmanlık, hizmet yetkinlikleri ve müsaitlik saatleri yönetimi
+•	Üyelerin randevu alma işlemleri + çakışma kontrolü
+•	Randevu onay mekanizması
+•	En az bir modülde REST API + LINQ ile filtreleme
+•	Yapay zekâ tabanlı öneri özelliği (minimum gereksinim)
+
+2. Kullanılan Teknolojiler
+•	ASP.NET Core MVC (net8.0)
+•	C#
+•	Entity Framework Core + LINQ
+•	SQL Server
+•	Bootstrap 5 + HTML/CSS + JavaScript
+•	Identity + Role Based Authorization
+•	REST API (en az 1 modül)
+•	AI entegrasyonu (minimum senaryo)
+
+3. Veri Tabanı Modeli (ER / İlişkiler)
+Sistemde temel varlıklar:
+•	Salon
+•	Hizmet
+•	Antrenor
+•	Uye
+•	Randevu
+Önemli ilişkiler:
+•	Bir Salon, birden fazla Hizmet barındırabilir.
+•	Bir Salon içinde birden fazla Antrenor çalışabilir.
+•	Antrenor ↔ Hizmet ilişkisi: (many-to-many) antrenör birden çok hizmet verebilir, bir hizmeti birden çok antrenör verebilir.
+•	Randevu, seçilen Uye + Antrenor + Salon + Hizmet bilgilerini içerir ve ayrıca hizmetin süre/ücret snapshot verilerini saklar.
+
+4. Modüller ve CRUD İşlemleri
+Projede tüm temel varlıklar için CRUD uygulanmıştır:
+4.1 Salon CRUD
+•	Salon listeleme (Index)
+•	Yeni salon ekleme (Create)
+•	Salon güncelleme (Edit)
+•	Salon silme (Delete)
+
+4.2 Hizmet CRUD
+•	Hizmet listeleme (Index)
+•	Yeni hizmet ekleme (Create)
+•	Hizmet güncelleme (Edit)
+•	Hizmet silme (Delete)
+4.3 Antrenör CRUD
+•	Antrenör listeleme (Index)
+•	Yeni antrenör ekleme (Create)
+•	Antrenör güncelleme (Edit)
+•	Antrenör silme (Delete)
+•	Antrenöre hizmet atama (many-to-many)
+4.4 Üye CRUD
+•	Üye listeleme (Index)
+•	Üye ekleme (Create)
+•	Üye güncelleme (Edit)
+•	Üye silme (Delete)
+4.5 Randevu CRUD + Onay/İptal
+•	Randevu listeleme (Index)
+•	Randevu oluşturma (Create)
+•	Randevu güncelleme (Edit) (varsa)
+•	Randevu onaylama (Onayla)
+•	Randevu iptal (Iptal / Delete yerine)
+
+5. Veri Doğrulama (Validation)
+Sistem hem istemci hem sunucu tarafında doğrulama içerir:
+•	[Required], [StringLength], [Range], [EmailAddress], [Phone]
+•	Razor tarafında _ValidationScriptsPartial kullanımı
+•	Sunucu tarafında ayrıca iş kuralları kontrolü yapılır.
+
+6. Randevu İş Kuralları (Çakışma Kontrolü + Saat Kontrolü)
+Randevu oluştururken sistem:
+•	Geçmiş tarihe randevu alınmasını engeller
+•	Salon çalışma saatleri dışına randevuyu engeller
+•	Antrenörün müsait saatleri dışına randevuyu engeller
+•	Aynı antrenörde zaman aralığı çakışmasını engeller
+•	Aynı üyede zaman aralığı çakışmasını engeller
+•	Randevu detaylarını (hizmet adı, süre, ücret) snapshot olarak saklar
+•	Randevuyu varsayılan olarak Onayli = false başlatır
+
+7. Admin Paneli + Kullanıcı Kayıt/Giriş + Roller
+Projede rol bazlı yetkilendirme uygulanmıştır:
+•	Admin:raafat@sakarya.edu.tr / Şifre: sau
+•	Üye: kayıtlı kullanıcı
+Yetki kontrolü:
+•	Yönetim sayfaları Admin rolüne kısıtlanabilir
+•	Üye randevu alabilir / görüntüleyebilir
+
+8. REST API + LINQ (Zorunlu Kısım)
+Projede en az bir modülde REST API ile veritabanı erişimi sağlanmıştır.
+ API tarafında LINQ sorguları ile filtreleme yapılır.
+Örnek senaryolar:
+•	Tüm antrenörleri listeleme
+•	Belirli tarihte uygun antrenörleri getirme
+•	Üyenin randevularını getirme
+
+9. Yapay Zekâ Entegrasyonu (Minimum Gereksinim)
+Projede kullanıcıdan alınan bilgilerle (ör. boy/kilo/hedef veya fotoğraf) AI aracılığıyla öneri üretilen bir özellik bulunur.
+ Minimum senaryoda kullanıcı form doldurur ve sistem öneri metni döndürür.
+
+10. Kurulum ve Çalıştırma
+1.	Proje klasörüne girilir
+2.	Bağlantı cümlesi (Connection String) ayarlanır
+3.	Migration uygulanır
+4.	Proje çalıştırılı
+
+11. GitHub ve Commit Şartı
+Projede düzenli commit yapılmıştır ve en az 10 commit şartı sağlanmıştır.
+
+12. Sonuç
+Bu projede ASP.NET Core MVC kullanılarak Fitness Center Yönetim ve Randevu Sistemi geliştirilmiş; veri tabanı modeli, CRUD işlemleri, doğrulama, rol bazlı yetkilendirme, randevu çakışma kontrolleri, REST API + LINQ ve minimum AI entegrasyonu başarıyla uygulanmıştır.
